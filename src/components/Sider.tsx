@@ -1,6 +1,6 @@
 import React from 'react'
-import { Menu, Icon, Switch } from 'antd'
-import { NavLink, Link } from 'react-router-dom'
+import { Menu, Icon } from 'antd'
+import { NavLink } from 'react-router-dom'
 
 const { SubMenu } = Menu
 
@@ -66,14 +66,9 @@ export default class Sider extends React.Component {
 
   render() {
     return (
-      <div style={{ color: '#fff' }}>
-        {/* <Switch onChange={this.changeMode} /> Change Mode
-        <span className='ant-divider' style={{ margin: '0 1em' }} />
-        <Switch onChange={this.changeTheme} /> Change Theme */}
+      <div>
         <Menu
-          style={{ width: '100%' }}
-          // defaultSelectedKeys={['1']}
-          // defaultOpenKeys={['0']}
+          style={{ width: '100%', minHeight: 600 }}
           mode={this.state.mode}
           theme={this.state.theme}
         >

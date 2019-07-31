@@ -14,3 +14,9 @@
   align-items: center;
   display: flex;
 }
+
+.login-form form {
+  padding: 40px;
+  background: #308eff;
+  border-radius: 6px;
+}

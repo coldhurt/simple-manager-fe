@@ -10,8 +10,24 @@ interface IndexProps {
 }
 
 const Index: React.FC<IndexProps> = props => {
-  React.useEffect(() => {})
-  return (
+  const [show, setShow] = React.useState(false)
+  React.useEffect(() => {
+    if (window.location.pathname !== '/login')
+      fetch('/getUserInfo', {
+        method: 'POST'
+      })
+        .then(res => {
+          return res.json()
+        })
+        .then(json => {
+          if (json.success === false) {
+            window.location.href = '/login'
+          } else {
+            setShow(true)
+          }
+        })
+  })
+  return show ? (
     <Layout>
       <Header>
         <MyHeader />
@@ -24,7 +40,7 @@ const Index: React.FC<IndexProps> = props => {
       </Layout>
       <Footer>Footer</Footer>
     </Layout>
-  )
+  ) : null
 }
 
 export default Index

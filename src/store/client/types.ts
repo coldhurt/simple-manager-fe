@@ -15,10 +15,6 @@ export interface IClientState {
   items: IClient[]
 }
 
-export interface IState extends Store {
-  clients: IClientState
-}
-
 export interface IProduct {
   productName: string
   type: string

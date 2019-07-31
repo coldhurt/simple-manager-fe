@@ -17,7 +17,7 @@ export const CLIENTS_DEFAULT_STATE: IClientState = {
   items: []
 }
 
-export default function clients(
+export default function clientsReducer(
   state: IClientState = CLIENTS_DEFAULT_STATE,
   action: IClientAction
 ): IClientState {

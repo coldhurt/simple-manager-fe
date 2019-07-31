@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import { fetchClients } from '../../store/client/actions'
 import { AppState } from '../../store'
 import { IClientState } from '../../store/client/types'
-import { Table } from 'antd'
+import { Table, Layout } from 'antd'
+
+const { Header, Content } = Layout
 
 interface IClientListProps {
   fetchClients: Function
@@ -42,7 +44,16 @@ class ClientList extends React.Component<IClientListProps> {
       }
     })
 
-    return <Table dataSource={data} columns={columns} />
+    return (
+      <Layout>
+        <Header style={{ color: '#fff', fontSize: 30, fontWeight: 'bold' }}>
+          客户列表
+        </Header>
+        <Content>
+          <Table dataSource={data} columns={columns} />
+        </Content>
+      </Layout>
+    )
   }
 }
 
