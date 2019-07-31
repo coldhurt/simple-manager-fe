@@ -14,3 +14,24 @@ react-redux
 react-router-dom
 typescript
 ```
+
+## Install and run
+
+install
+
+```
+npm install
+
+```
+
+start server for development
+
+```
+npm start
+```
+
+build and copy to backend build directory
+
+```
+npm run build
+```
