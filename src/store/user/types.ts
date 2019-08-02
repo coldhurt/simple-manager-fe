@@ -6,6 +6,7 @@ export interface IUserState {
   loading: boolean
   error: string
   success: boolean
+  admin: IAdmin
 }
 
 export interface IAdmin {

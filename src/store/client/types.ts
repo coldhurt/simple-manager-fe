@@ -1,5 +1,3 @@
-import { Store } from 'redux'
-
 export const ADD_CLIENT = 'ADD_CLIENT'
 export const ADD_CLIENT_SUCCESS = 'ADD_CLIENT_SUCCESS'
 export const CLIENTS_FAILURE = 'CLIENTS_FAILURE'

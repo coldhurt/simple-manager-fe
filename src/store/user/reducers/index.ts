@@ -2,16 +2,24 @@ import {
   IUserAction,
   USER_LOGIN,
   USER_LOGIN_SUCCESS,
-  USER_LOGIN_FAILED
+  USER_LOGIN_FAILED,
+  IUserState
 } from '../types'
 
-const DEFAULT_USER_STATE = {
+const DEFAULT_USER_STATE: IUserState = {
   loading: false,
   error: '',
-  success: false
+  success: false,
+  admin: {
+    username: '',
+    password: ''
+  }
 }
 
-export default function login(state = DEFAULT_USER_STATE, action: IUserAction) {
+export default function userReducer(
+  state: IUserState = DEFAULT_USER_STATE,
+  action: IUserAction
+): IUserState {
   switch (action.type) {
     case USER_LOGIN:
       return {

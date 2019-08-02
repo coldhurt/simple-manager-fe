@@ -5,6 +5,7 @@ import { IState } from '../../store/types'
 import { WrappedFormUtils } from 'antd/lib/form/Form'
 import { connect } from 'react-redux'
 import { loginAction } from '../../store/user/actions'
+import userReducer from '../../store/user/reducers'
 import './login.css'
 
 interface ILoginProps {
@@ -168,4 +169,8 @@ const LoginForm = connect(
   mapDispatchToProps
 )(Form.create({ name: 'horizontal_login' })(Login))
 
-export default LoginForm
+export default {
+  name: 'user',
+  reducers: userReducer,
+  view: LoginForm
+}

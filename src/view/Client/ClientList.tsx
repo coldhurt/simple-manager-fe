@@ -4,6 +4,7 @@ import { fetchClients } from '../../store/client/actions'
 import { AppState } from '../../store'
 import { IClientState } from '../../store/client/types'
 import { Table, Layout } from 'antd'
+import clientsReducer from '../../store/client/reducers'
 
 const { Header, Content } = Layout
 
@@ -67,7 +68,11 @@ const mapDispatchToProps = {
   fetchClients
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ClientList)
+export default {
+  name: 'clients',
+  reducers: clientsReducer,
+  view: connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(ClientList)
+}
