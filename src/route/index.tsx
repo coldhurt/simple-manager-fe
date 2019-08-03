@@ -6,6 +6,7 @@ import Index from '../view/Index'
 import NotFound from '../components/NotFound'
 import LazyLoadMoudle from '../components/LazyLoadModule'
 import { ConnectedComponentClass } from 'react-redux'
+import ClientDetail from '../view/Client/ClientDetail'
 
 // route config
 
@@ -32,6 +33,16 @@ const routes: IRouteItem[] = [
           <LazyLoadMoudle
             {...props}
             resolve={() => import('../view/Client/ClientList')}
+          />
+        ),
+        isAuthenticated: true
+      },
+      {
+        path: '/clientDetail/:id',
+        component: (props: Object) => (
+          <LazyLoadMoudle
+            {...props}
+            resolve={() => import('../view/Client/ClientDetail')}
           />
         ),
         isAuthenticated: true

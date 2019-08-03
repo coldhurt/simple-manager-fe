@@ -27,6 +27,8 @@ export interface IClient {
   tel: string
   payStatus: boolean
   products: Array<IProduct>
+  nextId?: string
+  prevId?: string
 }
 
 export interface IAddClientAction {

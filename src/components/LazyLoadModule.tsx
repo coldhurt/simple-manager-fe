@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { ReactReduxContext } from 'react-redux'
+import './lazy.css'
 
 interface ILazyProps {
   resolve(): Promise<any>
@@ -52,7 +53,12 @@ export default class LazyLoadModule extends React.Component<
     const { module, hasError } = this.state as ILazyState
     const { resolve, ...rest } = this.props
     if (hasError) return <div>{hasError.message}</div>
-    if (!module) return <div>Loading module...</div>
+    if (!module)
+      return (
+        <div className='lds-ripple'>
+          <div />
+        </div>
+      )
 
     if (module.view) return React.createElement(module.view, rest)
 

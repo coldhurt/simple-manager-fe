@@ -2,6 +2,7 @@ import React from 'react'
 import { Layout } from 'antd'
 import SiderBar from '../../components/Sider'
 import MyHeader from '../../components/MyHeader'
+import { Post } from '../../utils'
 
 const { Header, Sider, Content, Footer } = Layout
 
@@ -13,19 +14,13 @@ const Index: React.FC<IndexProps> = props => {
   const [show, setShow] = React.useState(false)
   React.useEffect(() => {
     if (window.location.pathname !== '/login')
-      fetch('/getUserInfo', {
-        method: 'POST'
+      Post('/getUserInfo', {}).then(json => {
+        if (json.success === false) {
+          window.location.href = '/login'
+        } else {
+          setShow(true)
+        }
       })
-        .then(res => {
-          return res.json()
-        })
-        .then(json => {
-          if (json.success === false) {
-            window.location.href = '/login'
-          } else {
-            setShow(true)
-          }
-        })
   })
   return show ? (
     <Layout>
@@ -38,7 +33,7 @@ const Index: React.FC<IndexProps> = props => {
         </Sider>
         <Content>{props.children}</Content>
       </Layout>
-      <Footer>Footer</Footer>
+      {/* <Footer>Footer</Footer> */}
     </Layout>
   ) : null
 }
