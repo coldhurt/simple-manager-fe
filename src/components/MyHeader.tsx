@@ -2,9 +2,9 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 const MyHeader = () => {
-  const onLogout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const onLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    fetch('/logout', { method: 'POST' })
+    await fetch('/logout', { method: 'POST' })
     window.location.href = '/login'
   }
   return (

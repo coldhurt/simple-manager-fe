@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import Index from '../view/Index'
 import NotFound from '../components/NotFound'
 import LazyLoadMoudle from '../components/LazyLoadModule'
-import { ConnectedComponentClass } from 'react-redux'
+import { ConnectedComponent } from 'react-redux'
 import ClientDetail from '../view/Client/ClientDetail'
 
 // route config
@@ -15,7 +15,7 @@ interface IRouteItem {
   component:
     | React.ComponentClass<any>
     | React.FC<any>
-    | ConnectedComponentClass<any, any>
+    | ConnectedComponent<any, any>
   exact?: boolean
   routes?: IRouteItem[]
   isAuthenticated?: boolean

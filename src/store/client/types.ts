@@ -29,6 +29,8 @@ export interface IClient {
   products: Array<IProduct>
   nextId?: string
   prevId?: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface IAddClientAction {

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ReactReduxContext } from 'react-redux'
 import './lazy.css'
+import { Skeleton } from 'antd'
 
 interface ILazyProps {
   resolve(): Promise<any>
@@ -55,9 +56,10 @@ export default class LazyLoadModule extends React.Component<
     if (hasError) return <div>{hasError.message}</div>
     if (!module)
       return (
-        <div className='lds-ripple'>
-          <div />
-        </div>
+        // <div className='lds-ripple'>
+        //   <div />
+        // </div>
+        <Skeleton />
       )
 
     if (module.view) return React.createElement(module.view, rest)

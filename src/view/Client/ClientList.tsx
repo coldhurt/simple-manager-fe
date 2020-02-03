@@ -1,8 +1,8 @@
-import React, { FormEvent } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { fetchClients } from '../../store/client/actions'
 import { AppState } from '../../store'
-import { IClientState } from '../../store/client/types'
+import { IClientState, IClient } from '../../store/client/types'
 import {
   Table,
   Layout,
@@ -12,12 +12,18 @@ import {
   Modal,
   Form,
   Input,
-  message
+  message,
+  Checkbox,
+  Popconfirm
 } from 'antd'
 import clientsReducer from '../../store/client/reducers'
 import { NavLink } from 'react-router-dom'
 import { FormComponentProps } from 'antd/lib/form'
+import { ColumnProps } from 'antd/lib/table'
 import { Post } from '../../utils'
+import moment from 'moment'
+import EditableTable from '../../components/EditableTable'
+import { IProductData, ColumnsType } from '../../components/types'
 
 const { Header, Content } = Layout
 
@@ -60,9 +66,67 @@ const AddClientModal = Form.create<IAddClientProps>({ name: 'AddClientForm' })(
       })
     }
 
+    const [products, setProducts] = React.useState<IProductData[]>([])
+
+    const handleDelete = (key: string) => {
+      const prods = products.filter(item => item.key !== key)
+      setProducts(prods)
+    }
+
+    const handleAdd = () => {
+      const newData: IProductData = {
+        key: products.length + 1,
+        productName: '',
+        type: '',
+        count: 1,
+        storageFee: 1,
+        processingFee: 1
+      }
+      setProducts([...products, newData])
+    }
+
+    const productsColumn: ColumnsType[] = [
+      {
+        title: '商品名',
+        dataIndex: 'productName',
+        width: '30%',
+        editable: true
+      },
+      {
+        title: '数量',
+        dataIndex: 'count'
+      },
+      {
+        title: '类型',
+        dataIndex: 'type'
+      },
+      {
+        title: '加工费',
+        dataIndex: 'processingFee'
+      },
+      {
+        title: '存储费',
+        dataIndex: 'storageFee'
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (text: string, record: IProductData) =>
+          products.length >= 1 ? (
+            <Popconfirm
+              title='Sure to delete?'
+              onConfirm={() => handleDelete(record.key as string)}
+            >
+              <a href='javascript:;'>Delete</a>
+            </Popconfirm>
+          ) : null
+      }
+    ]
+
     const { getFieldDecorator } = form
     return (
       <Modal
+        width={730}
         confirmLoading={confirmLoading}
         title='添加客户'
         visible={visible}
@@ -99,6 +163,16 @@ const AddClientModal = Form.create<IAddClientProps>({ name: 'AddClientForm' })(
               ]
             })(<Input />)}
           </Form.Item>
+          <Form.Item label='是否付款'>
+            {getFieldDecorator('payStatus', {})(<Checkbox />)}
+          </Form.Item>
+          <EditableTable
+            form={form}
+            columns={productsColumn}
+            dataSource={products}
+            handleAdd={handleAdd}
+            handleSave={handleSubmit}
+          />
         </Form>
       </Modal>
     )
@@ -147,9 +221,25 @@ class ClientList extends React.Component<IClientListProps> {
     })
   }
 
+  handleDelete = (obj: IClient) => {
+    Modal.confirm({
+      title: `确定删除${obj.clientName}吗？`,
+      onOk: () => {
+        console.log(obj)
+        Post('/deleteClient', { id: obj._id }).then(res => {
+          if (res.success) {
+            this.props.fetchClients()
+          } else {
+            message.error(res.msg)
+          }
+        })
+      }
+    })
+  }
+
   render() {
     const { clients } = this.props
-    const columns = [
+    const columns: ColumnProps<IClient>[] = [
       {
         title: '客户名',
         dataIndex: 'clientName',
@@ -167,10 +257,32 @@ class ClientList extends React.Component<IClientListProps> {
         render: (text: boolean) => <span>{text ? '已付款' : '未付款'}</span>
       },
       {
+        title: '加入日期',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        defaultSortOrder: 'descend',
+        sortDirections: ['descend', 'ascend'],
+        sorter: (a: IClient, b: IClient) =>
+          moment.utc(a.createdAt).milliseconds() -
+          moment.utc(b.createdAt).milliseconds(),
+        render: (date: string) => (
+          <span>
+            {moment
+              .utc(date || '')
+              .local()
+              .format('YYYY-MM-DD HH:mm:ss')}
+          </span>
+        )
+      },
+      {
         title: '操作',
         dataIndex: '_id',
-        render: (id: string) => (
-          <NavLink to={`/clientDetail/${id}`}>查看详情</NavLink>
+        render: (id: string, obj: IClient) => (
+          <div>
+            <NavLink to={`/clientDetail/${id}`}>查看详情</NavLink>
+            {' | '}
+            <a onClick={() => this.handleDelete(obj)}>删除</a>
+          </div>
         )
       }
     ]
@@ -226,8 +338,5 @@ const mapDispatchToProps = {
 export default {
   name: 'clients',
   reducers: clientsReducer,
-  view: connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ClientList)
+  view: connect(mapStateToProps, mapDispatchToProps)(ClientList)
 }
