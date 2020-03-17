@@ -13,16 +13,26 @@ interface ISiderDataItem {
 
 const siderData: ISiderDataItem[] = [
   {
-    path: '/clientList',
+    path: '/admin/client/list',
     title: '客户列表',
-    icon: '',
-    subMenu: [
-      {
-        path: '/clientList',
-        title: '客户列表',
-        icon: ''
-      }
-    ]
+    icon: ''
+    // subMenu: [
+    //   {
+    //     path: '/clientList',
+    //     title: '客户列表',
+    //     icon: ''
+    //   }
+    // ]
+  },
+  {
+    path: '/admin/adminList',
+    title: '管理员列表',
+    icon: ''
+  },
+  {
+    path: '/admin/article/list',
+    title: '文章列表',
+    icon: ''
   }
 ]
 
@@ -41,7 +51,10 @@ const SiderItem = (props: ISiderDataItem) => {
     </SubMenu>
   ) : (
     <Menu.Item key={props.title}>
-      <NavLink to={props.path}>{props.title}</NavLink>
+      <NavLink to={props.path}>
+        <Icon type={'appstore'} />
+        {props.title}
+      </NavLink>
     </Menu.Item>
   )
 }

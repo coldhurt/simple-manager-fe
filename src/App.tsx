@@ -1,10 +1,10 @@
 import React from 'react'
-import Router from './route/index'
+import Router from './route'
 import './App.css'
 
 export default function App() {
   return (
-    <div className='App'>
+    <div className='app-container'>
       <Router />
     </div>
   )

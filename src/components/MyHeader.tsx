@@ -4,12 +4,23 @@ import { NavLink } from 'react-router-dom'
 const MyHeader = () => {
   const onLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    await fetch('/logout', { method: 'POST' })
+    await fetch('/api/admin/logout', { method: 'POST' })
     window.location.href = '/login'
   }
   return (
-    <div>
-      <NavLink exact activeStyle={{ color: 'green' }} to='/'>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+      }}
+    >
+      <NavLink
+        exact
+        style={{ fontSize: 32 }}
+        activeStyle={{ color: 'green' }}
+        to='/'
+      >
         Simple Manager
       </NavLink>
       |{' '}

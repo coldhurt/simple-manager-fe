@@ -14,9 +14,9 @@ const Index: React.FC<IndexProps> = props => {
   const [show, setShow] = React.useState(false)
   React.useEffect(() => {
     if (window.location.pathname !== '/login')
-      Post('/getUserInfo', {}).then(json => {
+      Post('/api/admin/detail', {}).then(json => {
         if (json.success === false) {
-          window.location.href = '/login'
+          // window.location.href = '/login'
         } else {
           setShow(true)
         }

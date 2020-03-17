@@ -6,18 +6,17 @@ import clientsReducer from './client/reducers'
 import userReducer from './user/reducers'
 import { logger } from 'redux-logger'
 import { Store, Reducer } from 'redux'
+import articlesReducer from './article/reducers'
 
-const rootReducer = combineReducers({
+const reducerMaps = {
   clients: clientsReducer,
-  user: userReducer as Reducer
-})
+  users: userReducer,
+  articles: articlesReducer
+}
+
+const rootReducer = combineReducers(reducerMaps)
 
 export type AppState = ReturnType<typeof rootReducer>
-
-// const store = createStore(rootReducer, compose(applyMiddleware(sagaMiddleware)))
-// sagaMiddleware.run(rootSaga)
-
-// export default store
 
 interface IAddDynamicProps {
   name: string
@@ -77,7 +76,4 @@ const createMyStore = (reducerMap: ReducersMapObject) => {
   return store
 }
 
-export default createMyStore({
-  //   clients: clientsReducer,
-  //   user: userReducer as Reducer
-})
+export default createMyStore(reducerMaps)

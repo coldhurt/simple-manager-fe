@@ -170,19 +170,23 @@ export default class EditableTable extends React.Component<
       },
       {
         title: '数量',
-        dataIndex: 'count'
+        dataIndex: 'count',
+        editable: true
       },
       {
         title: '类型',
-        dataIndex: 'type'
+        dataIndex: 'type',
+        editable: true
       },
       {
         title: '加工费',
-        dataIndex: 'processingFee'
+        dataIndex: 'processingFee',
+        editable: true
       },
       {
         title: '存储费',
-        dataIndex: 'storageFee'
+        dataIndex: 'storageFee',
+        editable: true
       },
       {
         title: '操作',

@@ -1,14 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
-// import Login from '../view/Login/index'
-// import ClientList from '../view/Client/ClientList'
-import Index from '../view/Index'
+import Index from '../view/Admin'
 import NotFound from '../components/NotFound'
 import LazyLoadMoudle from '../components/LazyLoadModule'
 import { ConnectedComponent } from 'react-redux'
-import ClientDetail from '../view/Client/ClientDetail'
-
-// route config
 
 interface IRouteItem {
   path: string
@@ -24,11 +19,19 @@ interface IRouteItem {
 const routes: IRouteItem[] = [
   {
     path: '/',
+    exact: true,
+    isAuthenticated: true,
+    component: (props: Object) => (
+      <LazyLoadMoudle {...props} resolve={() => import('../view/IndexPage')} />
+    )
+  },
+  {
+    path: '/admin',
     component: Index,
     isAuthenticated: true,
     routes: [
       {
-        path: '/clientList',
+        path: '/admin/client/list',
         component: (props: Object) => (
           <LazyLoadMoudle
             {...props}
@@ -38,7 +41,7 @@ const routes: IRouteItem[] = [
         isAuthenticated: true
       },
       {
-        path: '/clientDetail/:id',
+        path: '/admin/client/detail/:id',
         component: (props: Object) => (
           <LazyLoadMoudle
             {...props}
@@ -46,6 +49,36 @@ const routes: IRouteItem[] = [
           />
         ),
         isAuthenticated: true
+      },
+      {
+        path: '/admin/adminList',
+        isAuthenticated: true,
+        component: (props: Object) => (
+          <LazyLoadMoudle
+            {...props}
+            resolve={() => import('../view/Admin/AdminList')}
+          />
+        )
+      },
+      {
+        path: '/admin/article/list',
+        isAuthenticated: true,
+        component: (props: Object) => (
+          <LazyLoadMoudle
+            {...props}
+            resolve={() => import('../view/Article/ArticleList')}
+          />
+        )
+      },
+      {
+        path: '/admin/article/create',
+        isAuthenticated: true,
+        component: (props: Object) => (
+          <LazyLoadMoudle
+            {...props}
+            resolve={() => import('../view/Article/AddArticle')}
+          />
+        )
       }
     ]
   },
@@ -57,9 +90,18 @@ const routes: IRouteItem[] = [
     )
   },
   {
+    path: '/im',
+    exact: true,
+    isAuthenticated: true,
+    component: (props: Object) => (
+      <LazyLoadMoudle {...props} resolve={() => import('../view/IM/Index')} />
+    )
+  },
+  {
     path: '/404',
     exact: true,
-    component: NotFound
+    component: NotFound,
+    isAuthenticated: true
   }
 ]
 

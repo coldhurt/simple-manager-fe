@@ -1,6 +1,7 @@
 import { message } from 'antd'
 
 const postOptions = {
+  host: 'localhost:4000',
   method: 'POST',
   body: '',
   headers: new Headers({
@@ -31,7 +32,14 @@ const Post = (url: string, body: Object) => {
           return res.json()
         }
       })
-      .then((json: IResponseJSON) => resolve(json))
+      .then((json: IResponseJSON) => {
+        if (json.msg === 'need login') {
+          const location = window.location
+          location.href = `/login?url=${location.origin}${location.pathname}`
+        } else {
+          resolve(json)
+        }
+      })
       .catch(err => {
         if (err) {
           message.error(err.message)

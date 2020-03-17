@@ -199,7 +199,7 @@ class ClientList extends React.Component<IClientListProps> {
     this.setState({
       confirmLoading: true
     })
-    const res = await Post('/addClient', data)
+    const res = await Post('/api/client/add', data)
     if (res.success) {
       message.success('添加成功')
       this.props.fetchClients()
@@ -226,7 +226,7 @@ class ClientList extends React.Component<IClientListProps> {
       title: `确定删除${obj.clientName}吗？`,
       onOk: () => {
         console.log(obj)
-        Post('/deleteClient', { id: obj._id }).then(res => {
+        Post('/api/client/delete', { id: obj._id }).then(res => {
           if (res.success) {
             this.props.fetchClients()
           } else {
@@ -279,7 +279,7 @@ class ClientList extends React.Component<IClientListProps> {
         dataIndex: '_id',
         render: (id: string, obj: IClient) => (
           <div>
-            <NavLink to={`/clientDetail/${id}`}>查看详情</NavLink>
+            <NavLink to={`/admin/client/detail/${id}`}>查看详情</NavLink>
             {' | '}
             <a onClick={() => this.handleDelete(obj)}>删除</a>
           </div>
@@ -301,7 +301,7 @@ class ClientList extends React.Component<IClientListProps> {
           <Row>
             <Col span={22}>客户列表</Col>
             <Col span={2}>
-              <Button onClick={this.handleAdd} type='primary'>
+              <Button onClick={this.handleAdd} type='primary' icon='plus'>
                 添加新客户
               </Button>
             </Col>

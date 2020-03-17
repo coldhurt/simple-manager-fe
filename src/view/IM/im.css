@@ -1,0 +1,135 @@
+.im-container {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.im-container .ant-layout-content {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.im-container .current-user-bar {
+  padding: 10px;
+  color: #fff;
+}
+.message-list {
+  position: absolute;
+  top: 10px;
+  bottom: 50px;
+  left: 10px;
+  right: 10px;
+}
+.friend-list .ant-list-item,
+.message-list .ant-list-item {
+  border-bottom: 0;
+  padding: 0;
+}
+.send-form {
+  position: absolute;
+  bottom: 0;
+  margin: 10px;
+  width: 100%;
+}
+.friend-list img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.im-container .add-friend-btn {
+  position: absolute;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 30px;
+  padding: 5px;
+  right: 10px;
+  bottom: 10px;
+}
+.add-friend-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.add-friend-list-item .ant-avatar {
+  margin-right: 10px;
+}
+.chat-box-list {
+  margin: 0 auto;
+  position: absolute;
+  left: 10px;
+  width: 90%;
+  padding: 20px;
+  top: 50px;
+  bottom: 50px;
+  background: url('/images/chatbox1.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-y: scroll;
+  border-radius: 6px;
+}
+.chat-box-list .ant-avatar {
+  margin: 10px;
+}
+.chat-box-list .send-message-item,
+.chat-box-list .receive-message-item {
+  position: relative;
+  border-bottom: 0px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+.chat-box-list .send-message-item > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: burlywood;
+  position: absolute;
+  right: 0;
+  padding-left: 30px;
+  border-radius: 6px;
+}
+.chat-box-list .receive-message-item > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: burlywood;
+  justify-content: flex-start;
+  position: absolute;
+  left: 0;
+  padding-right: 30px;
+  border-radius: 6px;
+}
+
+.friend-row {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  width: 100%;
+  color: #fff;
+  cursor: pointer;
+}
+
+.friend-row:hover {
+  background-color: bisque;
+  color: black;
+}
+
+.friend-row.active {
+  background-color: burlywood;
+  color: black;
+}
+
+.friend-row .left {
+  width: 40px;
+  height: 40px;
+}
+
+.friend-row .right {
+  padding-left: 10px;
+  flex: 1;
+}

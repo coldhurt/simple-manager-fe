@@ -36,7 +36,14 @@ class Login extends React.Component<ILoginProps> {
       } else {
         message.success('login successfully')
         setTimeout(() => {
-          window.location.href = '/'
+          console.log(window.location.search)
+          const search = window.location.search
+          const urls = search.match(/\?url=(http\S+)/)
+          if (urls && urls[1]) {
+            window.location.href = urls[1]
+          } else {
+            window.location.href = '/admin'
+          }
         })
       }
     }
