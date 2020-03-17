@@ -90,6 +90,14 @@ const routes: IRouteItem[] = [
     )
   },
   {
+    path: '/register',
+    exact: true,
+    isAuthenticated: true,
+    component: (props: Object) => (
+      <LazyLoadMoudle {...props} resolve={() => import('../view/Register')} />
+    )
+  },
+  {
     path: '/im',
     exact: true,
     isAuthenticated: true,

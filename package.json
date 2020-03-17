@@ -5,7 +5,7 @@
   "proxy": "http://localhost:4000/",
   "dependencies": {
     "@types/draft-js": "^0.10.38",
-    "antd": "^3.26.7",
+    "antd": "^3.26.13",
     "braft-editor": "^2.3.8",
     "lodash": "^4.17.15",
     "lodash.template": "^4.5.0",

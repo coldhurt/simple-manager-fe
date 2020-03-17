@@ -37,6 +37,7 @@ export interface IAdmin {
   avatar?: string
   username: string
   password?: string
+  nickname?: string
   _id: string
   createdAt?: string
   lastMsg?: string

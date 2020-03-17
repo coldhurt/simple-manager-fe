@@ -5,6 +5,9 @@ import userReducer from '../store/user/reducers'
 import { connect } from 'react-redux'
 
 function Index() {
+  React.useEffect(() => {
+    window.location.href = '/im'
+  })
   return <div>hello world</div>
 }
 
