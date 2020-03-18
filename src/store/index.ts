@@ -7,11 +7,13 @@ import userReducer from './user/reducers'
 import { logger } from 'redux-logger'
 import { Store, Reducer } from 'redux'
 import articlesReducer from './article/reducers'
+import utilReducer from './util/reducers'
 
 const reducerMaps = {
   clients: clientsReducer,
   users: userReducer,
-  articles: articlesReducer
+  articles: articlesReducer,
+  util: utilReducer
 }
 
 const rootReducer = combineReducers(reducerMaps)

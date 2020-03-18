@@ -8,7 +8,7 @@ function Index() {
   React.useEffect(() => {
     window.location.href = '/im'
   })
-  return <div>hello world</div>
+  return <div></div>
 }
 
 const mapStateToProps = (state: AppState) => {

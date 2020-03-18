@@ -36,9 +36,10 @@ export const loginFailedAction = (error: string) => {
   }
 }
 
-export const loginSuccessAction = () => {
+export const loginSuccessAction = (data: IAdmin) => {
   return {
-    type: USER_LOGIN_SUCCESS
+    type: USER_LOGIN_SUCCESS,
+    data
   }
 }
 

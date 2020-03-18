@@ -1,164 +1,102 @@
 import React from 'react'
-import { Form, Icon, Input, Button, message, Layout } from 'antd'
-import { IUserState } from '../../store/user/types'
+import { IUserState, IAdmin } from '../../store/user/types'
 import { IState } from '../../store/types'
-import { WrappedFormUtils } from 'antd/lib/form/Form'
 import { connect } from 'react-redux'
 import { loginAction } from '../../store/user/actions'
 import userReducer from '../../store/user/reducers'
+import {
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  TextField,
+  makeStyles
+} from '@material-ui/core'
 import './login.css'
+import { MessageActionProps } from '../../App'
+import { showMessageAction } from '../../store/util/actions'
 
-interface ILoginProps {
+interface LoginProps {
   user: IUserState
-  form: WrappedFormUtils
-  login: Function
+  login(auth: Object): void
 }
 
-const { Content } = Layout
-
-function hasErrors(fieldsError: Record<string, string[] | undefined>) {
-  return Object.keys(fieldsError).some((field: string) => fieldsError[field])
-}
-class Login extends React.Component<ILoginProps> {
-  constructor(props: ILoginProps) {
-    super(props)
-    this.state = {
-      username: '',
-      password: ''
-    }
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+    backgroundColor: '#cfe8fc',
+    height: '100vh',
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
+  },
+  form: {
+    justifyContent: 'center'
+  },
+  item: {
+    justifyContent: 'center'
+  },
+  button: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    padding: '0 30px'
   }
+})
 
-  static getDerivedStateFromProps(nextProps: ILoginProps, prevState: any) {
-    const { loading, error, success } = nextProps.user
-    if (!loading && prevState.loading) {
-      if (!success && error) {
-        message.error(error)
-      } else {
-        message.success('login successfully')
-        setTimeout(() => {
-          console.log(window.location.search)
-          const search = window.location.search
-          const urls = search.match(/\?url=(http\S+)/)
-          if (urls && urls[1]) {
-            window.location.href = urls[1]
-          } else {
-            window.location.href = '/admin'
-          }
-        })
-      }
-    }
-
-    return { ...prevState, loading }
-  }
-
-  onChangeState = (stateKey: string) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    this.setState({
-      stateKey: e.target.value
-    })
-  }
-
-  componentDidMount() {
-    // To disabled submit button at the beginning.
-    this.props.form.validateFields()
-  }
-
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    this.props.form.validateFields((err: any, values: any) => {
-      if (!err) {
-        console.log('Received values of form: ', values)
-        this.props.login(values)
-      }
-    })
-  }
-
-  render() {
-    const {
-      getFieldDecorator,
-      getFieldsError,
-      getFieldError,
-      isFieldTouched
-    } = this.props.form
-
-    const { loading } = this.props.user
-
-    // Only show error after a field is touched.
-    const usernameError =
-      isFieldTouched('username') && getFieldError('username')
-    const passwordError =
-      isFieldTouched('password') && getFieldError('password')
-    return (
-      <Layout className='login-layout'>
-        <Content className='login-form'>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Item
-              validateStatus={usernameError ? 'error' : ''}
-              help={usernameError || ''}
+const Login: React.SFC<LoginProps & MessageActionProps> = ({
+  showMessageAction,
+  login
+}) => {
+  const classes = useStyles()
+  const [username, setUsername] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  return (
+    <Container className={classes.root} disableGutters>
+      <CssBaseline>
+        <Grid container spacing={4} className={classes.form}>
+          <Grid item xs={8} className={classes.item} container>
+            <TextField
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              label='username'
+              required
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={8} className={classes.item} container>
+            <TextField
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              label='password'
+              type='password'
+              required
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={8} className={classes.item} container>
+            <Button
+              className={classes.button}
+              fullWidth
+              onClick={() => {
+                login({ username, password })
+                // showMessageAction({
+                //   message: `${username}:${password}`,
+                //   type: 'success'
+                // })
+              }}
             >
-              {getFieldDecorator('username', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your username!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon
-                      type='user'
-                      style={{
-                        color: 'rgba(0,0,0,.25)'
-                      }}
-                    />
-                  }
-                  placeholder='Username'
-                />
-              )}
-            </Form.Item>
-            <Form.Item
-              validateStatus={passwordError ? 'error' : ''}
-              help={passwordError || ''}
-            >
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your Password!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon
-                      type='lock'
-                      style={{
-                        color: 'rgba(0,0,0,.25)'
-                      }}
-                    />
-                  }
-                  type='password'
-                  placeholder='Password'
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type='primary'
-                htmlType='submit'
-                loading={loading}
-                disabled={hasErrors(getFieldsError())}
-              >
-                Log in
-              </Button>
-            </Form.Item>
-          </Form>
-        </Content>
-      </Layout>
-    )
-  }
+              Login
+            </Button>
+          </Grid>
+        </Grid>
+      </CssBaseline>
+    </Container>
+  )
 }
 
 const mapStateToProps = (state: IState) => {
@@ -168,13 +106,11 @@ const mapStateToProps = (state: IState) => {
 }
 
 const mapDispatchToProps = {
-  login: loginAction
+  login: loginAction,
+  showMessageAction
 }
 
-const LoginForm = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Form.create({ name: 'horizontal_login' })(Login))
+const LoginForm = connect(mapStateToProps, mapDispatchToProps)(Login)
 
 export default {
   name: 'user',

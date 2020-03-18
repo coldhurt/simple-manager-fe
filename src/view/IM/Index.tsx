@@ -10,7 +10,8 @@ import {
 } from '../../store/user/actions'
 import { connect } from 'react-redux'
 import { IUserState, IAdmin, IMessage } from '../../store/user/types'
-import { Layout, Input, Row, Col, Button, message, Menu, Icon } from 'antd'
+import { MessageOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Input, Row, Col, Button, message, Menu } from 'antd';
 import io from 'socket.io-client'
 import Sider from 'antd/lib/layout/Sider'
 import FriendList from './FriendList'
@@ -171,10 +172,10 @@ class IMView extends Component<IMProps, IMState> {
             theme='dark'
           >
             <Menu.Item key='message'>
-              <Icon type='message' />
+              <MessageOutlined />
             </Menu.Item>
             <Menu.Item key='friends'>
-              <Icon type='user' />
+              <UserOutlined />
             </Menu.Item>
           </Menu>
           {currentSiderMenu === 'friends' ? (
@@ -222,7 +223,7 @@ class IMView extends Component<IMProps, IMState> {
           </Content>
         )}
       </Layout>
-    )
+    );
   }
 }
 const mapStateToProps = (state: AppState) => {

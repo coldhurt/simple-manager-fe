@@ -1,4 +1,5 @@
-import { List, Spin, Empty, Icon, Avatar } from 'antd'
+import { PlusOutlined, UserOutlined } from '@ant-design/icons';
+import { List, Spin, Empty, Avatar } from 'antd';
 import * as React from 'react'
 import { IAdmin } from '../../store/user/types'
 
@@ -46,14 +47,14 @@ const FriendList: React.SFC<FriendListProps> = ({
           <Empty
             imageStyle={{ height: 30, width: 'auto' }}
             style={{ color: '#fff', marginTop: 30 }}
-            image={<Icon type='user' />}
+            image={<UserOutlined />}
             description='好友为空'
           ></Empty>
         )}
       </Spin>
-      <Icon onClick={onClickAddFriend} type='plus' className='add-friend-btn' />
+      <PlusOutlined onClick={onClickAddFriend} className='add-friend-btn' />
     </div>
-  )
+  );
 }
 
 export default FriendList

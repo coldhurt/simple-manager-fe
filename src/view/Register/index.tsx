@@ -1,140 +1,126 @@
 import React from 'react'
-import { Form, Icon, Input, Button, message, Layout } from 'antd'
-import { WrappedFormUtils } from 'antd/lib/form/Form'
+import { Input, Button, Layout, Form, Tooltip } from 'antd'
 import userReducer from '../../store/user/reducers'
 import './register.css'
-
-interface IRegisterProps {
-  form: WrappedFormUtils
-}
+import { QuestionCircleOutlined } from '@ant-design/icons'
 
 const { Content } = Layout
 
-function hasErrors(fieldsError: Record<string, string[] | undefined>) {
-  return Object.keys(fieldsError).some((field: string) => fieldsError[field])
-}
-class Register extends React.Component<IRegisterProps> {
+class Register extends React.Component {
   state = {
     loading: false
   }
 
-  componentDidMount() {
-    this.props.form.validateFields()
-  }
+  componentDidMount() {}
 
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    this.props.form.validateFields((err: any, values: any) => {
-      if (!err) {
-        console.log('Received values of form: ', values)
-      }
-    })
+  onFinish = (values: any) => {
+    console.log('Received values of form: ', values)
   }
 
   render() {
-    const {
-      getFieldDecorator,
-      getFieldsError,
-      getFieldError,
-      isFieldTouched
-    } = this.props.form
-
-    // Only show error after a field is touched.
-    const usernameError =
-      isFieldTouched('username') && getFieldError('username')
-    const passwordError =
-      isFieldTouched('password') && getFieldError('password')
-    const repasswordError =
-      isFieldTouched('repassword') && getFieldError('repassword')
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 10 }
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 }
+      }
+    }
+    const tailFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0
+        },
+        sm: {
+          span: 16,
+          offset: 8
+        }
+      }
+    }
     return (
       <Layout className='register-layout'>
         <Content className='register-form'>
-          <Form onSubmit={this.handleSubmit}>
+          <Form
+            {...formItemLayout}
+            onFinish={this.onFinish}
+            name='register'
+            scrollToFirstError
+          >
             <Form.Item
-              validateStatus={usernameError ? 'error' : ''}
-              help={usernameError || ''}
+              name='username'
+              label='Username'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your username!'
+                }
+              ]}
             >
-              {getFieldDecorator('username', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your username!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon
-                      type='user'
-                      style={{
-                        color: 'rgba(0,0,0,.25)'
-                      }}
-                    />
-                  }
-                  placeholder='Username'
-                />
-              )}
+              <Input />
             </Form.Item>
             <Form.Item
-              validateStatus={passwordError ? 'error' : ''}
-              help={passwordError || ''}
+              name='password'
+              label='Password'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!'
+                }
+              ]}
+              hasFeedback
             >
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your Password!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon
-                      type='lock'
-                      style={{
-                        color: 'rgba(0,0,0,.25)'
-                      }}
-                    />
-                  }
-                  type='password'
-                  placeholder='Password'
-                />
-              )}
+              <Input.Password />
             </Form.Item>
             <Form.Item
-              validateStatus={repasswordError ? 'error' : ''}
-              help={repasswordError || ''}
+              name='confirm'
+              label='Confirm Password'
+              dependencies={['password']}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: 'Please confirm your password!'
+                },
+                ({ getFieldValue }) => ({
+                  validator(rule, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(
+                      'The two passwords that you entered do not match!'
+                    )
+                  }
+                })
+              ]}
             >
-              {getFieldDecorator('repassword', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your Password again!'
-                  }
-                ]
-              })(
-                <Input
-                  prefix={
-                    <Icon
-                      type='lock'
-                      style={{
-                        color: 'rgba(0,0,0,.25)'
-                      }}
-                    />
-                  }
-                  type='password'
-                  placeholder='Password twice'
-                />
-              )}
+              <Input.Password />
             </Form.Item>
-            <Form.Item>
-              <Button
-                type='primary'
-                htmlType='submit'
-                loading={this.state.loading}
-                disabled={hasErrors(getFieldsError())}
-              >
-                注册
+            <Form.Item
+              name='nickname'
+              label={
+                <span>
+                  Nickname&nbsp;
+                  <Tooltip title='What do you want others to call you?'>
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </span>
+              }
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your nickname!',
+                  whitespace: true
+                }
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
+              <Button type='primary' htmlType='submit'>
+                Register
               </Button>
             </Form.Item>
           </Form>
@@ -144,10 +130,8 @@ class Register extends React.Component<IRegisterProps> {
   }
 }
 
-const RegisterForm = Form.create({ name: 'register_form' })(Register)
-
 export default {
   name: 'register',
   reducers: userReducer,
-  view: RegisterForm
+  view: Register
 }

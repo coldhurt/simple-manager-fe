@@ -1,4 +1,5 @@
-import { Modal, Input, Button, Avatar, Icon, Row, Col, message } from 'antd'
+import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { Modal, Input, Button, Avatar, Row, Col, message } from 'antd';
 import * as React from 'react'
 import { IAdmin, IUserState } from '../../store/user/types'
 import { AppState } from '../../store'
@@ -27,10 +28,10 @@ const AddFriendListItem: React.SFC<AddFriendListItemProps> = ({
       <Avatar src={user.avatar} />
       <div>
         <div>{user.username}</div>
-        <Icon type='plus' onClick={() => onClickAdd(user)} />
+        <PlusOutlined onClick={() => onClickAdd(user)} />
       </div>
     </div>
-  )
+  );
 }
 
 class AddFriendModal extends React.Component<AddFriendModalProps> {
@@ -75,7 +76,7 @@ class AddFriendModal extends React.Component<AddFriendModalProps> {
             />
           </Col>
           <Col span={4}>
-            <Button icon='search' onClick={this.onSearch}>
+            <Button icon={<SearchOutlined />} onClick={this.onSearch}>
               搜索
             </Button>
           </Col>
@@ -93,7 +94,7 @@ class AddFriendModal extends React.Component<AddFriendModalProps> {
           </Row>
         </div>
       </Modal>
-    )
+    );
   }
 }
 

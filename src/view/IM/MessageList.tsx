@@ -1,4 +1,5 @@
-import { List, Spin, Empty, Icon, Avatar } from 'antd'
+import { MessageOutlined } from '@ant-design/icons';
+import { List, Spin, Empty, Avatar } from 'antd';
 import * as React from 'react'
 import { IAdmin } from '../../store/user/types'
 
@@ -42,12 +43,12 @@ const MessageList: React.SFC<MessageListProps> = ({
         <Empty
           imageStyle={{ height: 30, width: 'auto' }}
           style={{ color: '#fff', marginTop: 30 }}
-          image={<Icon type='message' />}
+          image={<MessageOutlined />}
           description='消息列表为空'
         ></Empty>
       )}
     </Spin>
-  )
+  );
 }
 
 export default MessageList

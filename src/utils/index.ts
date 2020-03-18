@@ -1,7 +1,7 @@
 import { message } from 'antd'
 
 const postOptions = {
-  host: 'localhost:4000',
+  // host: '',
   method: 'POST',
   body: '',
   headers: new Headers({
@@ -13,13 +13,14 @@ export interface IResponseJSON {
   success: boolean
   msg?: string
   data: any
+  code?: number
 }
 
 interface IResolve {
   (json: IResponseJSON): void
 }
 
-const Post = (url: string, body: Object) => {
+const Post = (url: string, body = {}) => {
   return new Promise(function(resolve: IResolve, reject: Function) {
     fetch(url, {
       ...postOptions,
@@ -33,9 +34,15 @@ const Post = (url: string, body: Object) => {
         }
       })
       .then((json: IResponseJSON) => {
-        if (json.msg === 'need login') {
-          const location = window.location
-          location.href = `/login?url=${location.origin}${location.pathname}`
+        if (json.success === false) {
+          // need login
+          if (json.code === 401) {
+            const location = window.location
+            location.href = `/login?url=${location.origin}${location.pathname}`
+          }
+          if (json.msg) {
+            message.error(json.msg)
+          }
         } else {
           resolve(json)
         }

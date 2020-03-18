@@ -23,7 +23,6 @@ import {
   FRIEND_ADD,
   IFriendAddAction,
   USER_INFO,
-  IUserInfoAction,
   CHAT_BOX_LIST,
   IChatBoxListAction
 } from '../user/types'
@@ -42,24 +41,16 @@ import {
 } from '../user/actions'
 import { IFetchArticleAction, FETCH_ARTICLES } from '../article/types'
 import { fetchArticlesFailed, fetchArticlesSuccess } from '../article/actions'
+import { Post } from '../../utils'
 
-const fetchOptions = {
-  method: 'POST',
-  body: '',
-  headers: new Headers({
-    'Content-Type': 'application/json'
-  })
-}
-
-function myFetch(url: string, options: RequestInit) {
-  return fetch(`${url}`, options)
+function myFetch(url: string, body?: Object) {
+  return Post(url, body)
 }
 
 function* getAllClients() {
   try {
-    const res = yield call(myFetch, '/api/client/list', fetchOptions)
-    const clients = yield res.json()
-    yield put(loadedClients(clients.data))
+    const json = yield call(myFetch, '/api/client/list')
+    yield put(loadedClients(json.data))
   } catch (e) {
     yield put(clientsFailure(e.message))
   }
@@ -67,12 +58,8 @@ function* getAllClients() {
 
 function* addClient(action: IAddClientAction) {
   try {
-    const res = yield call(myFetch, '/api/client/add', {
-      ...fetchOptions,
-      body: JSON.stringify(action.client)
-    })
-    const client = yield res.json()
-    yield put(addClientSuccess(client))
+    const json = yield call(myFetch, '/api/client/add', action.client)
+    yield put(addClientSuccess(json))
   } catch (e) {
     yield put(clientsFailure(e.message))
   }
@@ -80,10 +67,7 @@ function* addClient(action: IAddClientAction) {
 
 function* deleteClient(action: IDeleteClientAction) {
   try {
-    yield call(myFetch, `/api/client/delete`, {
-      ...fetchOptions,
-      body: JSON.stringify({ id: action.id })
-    })
+    yield call(myFetch, `/api/client/delete`, { id: action.id })
   } catch (e) {
     yield put(clientsFailure(e.message))
   }
@@ -91,10 +75,7 @@ function* deleteClient(action: IDeleteClientAction) {
 
 function* updateClient(action: IToggleClientAction) {
   try {
-    yield call(myFetch, `/api/client/update`, {
-      ...fetchOptions,
-      body: JSON.stringify({ id: action.id })
-    })
+    yield call(myFetch, `/api/client/update`, { id: action.id })
   } catch (e) {
     yield put(clientsFailure(e.message))
   }
@@ -102,13 +83,16 @@ function* updateClient(action: IToggleClientAction) {
 
 function* login(action: ILoginAction) {
   try {
-    const res = yield call(myFetch, `/api/admin/login`, {
-      ...fetchOptions,
-      body: JSON.stringify(action.admin)
-    })
-    const json = yield res.json()
+    const json = yield call(myFetch, `/api/admin/login`, action.admin)
     if (json.success) {
-      yield put(loginSuccessAction())
+      yield put(loginSuccessAction(json.data))
+      const location = window.location
+      if (location.search) {
+        const url = location.search.match(/url=(\/.+|http.+)/)
+        if (url) {
+          location.href = url[1]
+        }
+      }
     } else {
       yield put(loginFailedAction(json.msg))
     }
@@ -119,7 +103,7 @@ function* login(action: ILoginAction) {
 
 function* fetchUserList(action: IUserListAction) {
   try {
-    const res = yield call(myFetch, '/api/admin/list', fetchOptions)
+    const res = yield call(myFetch, '/api/admin/list')
     const userRes = yield res.json()
     yield put(userListSuccessAction(userRes.data))
   } catch (e) {
@@ -129,7 +113,7 @@ function* fetchUserList(action: IUserListAction) {
 
 function* fetchArticleList(action: IFetchArticleAction) {
   try {
-    const res = yield call(myFetch, '/api/article/list', fetchOptions)
+    const res = yield call(myFetch, '/api/article/list')
     const userRes = yield res.json()
     yield put(fetchArticlesSuccess(userRes.data))
   } catch (e) {
@@ -139,9 +123,8 @@ function* fetchArticleList(action: IFetchArticleAction) {
 
 function* fetchFriendList(action: IFriendListAction) {
   try {
-    const res = yield call(myFetch, '/api/friend/list', fetchOptions)
-    const userRes = yield res.json()
-    yield put(friendListSuccessAction(userRes.data))
+    const json = yield call(myFetch, '/api/friend/list')
+    yield put(friendListSuccessAction(json.data))
   } catch (e) {
     yield put(friendListFailedAction(e.message))
   }
@@ -149,12 +132,10 @@ function* fetchFriendList(action: IFriendListAction) {
 
 function* addFriend(action: IFriendAddAction) {
   try {
-    const res = yield call(myFetch, '/api/friend/add', {
-      ...fetchOptions,
-      body: JSON.stringify({ friend_id: action.friend_id })
+    const json = yield call(myFetch, '/api/friend/add', {
+      friend_id: action.friend_id
     })
-    const userRes = yield res.json()
-    yield put(friendAddSuccessAction(userRes.data))
+    yield put(friendAddSuccessAction(json.data))
   } catch (e) {
     yield put(friendAddFailedAction(e.message))
   }
@@ -162,9 +143,8 @@ function* addFriend(action: IFriendAddAction) {
 
 function* fetchUserInfo() {
   try {
-    const res = yield call(myFetch, '/api/admin/detail', fetchOptions)
-    const userRes = yield res.json()
-    yield put(userInfoSuccessAction(userRes.data))
+    const json = yield call(myFetch, '/api/admin/detail')
+    yield put(userInfoSuccessAction(json.data))
   } catch (e) {
     yield put(friendAddFailedAction(e.message))
   }
@@ -172,12 +152,10 @@ function* fetchUserInfo() {
 
 function* fetchChatBoxMessage(action: IChatBoxListAction) {
   try {
-    const res = yield call(myFetch, '/api/message/list', {
-      ...fetchOptions,
-      body: JSON.stringify({ friend_id: action.friend_id })
+    const json = yield call(myFetch, '/api/message/list', {
+      friend_id: action.friend_id
     })
-    const userRes = yield res.json()
-    yield put(chatBoxListSuccessAction(userRes.data))
+    yield put(chatBoxListSuccessAction(json.data))
   } catch (e) {
     yield put(chatBoxListFailedAction(e.message))
   }
