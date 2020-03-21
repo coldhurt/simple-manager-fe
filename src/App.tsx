@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { IUtilState } from './store/util/types'
 import { showMessageAction, hideMessageAction } from './store/util/actions'
 import { AppState } from './store'
+import { Container, CssBaseline, makeStyles } from '@material-ui/core'
 
 export type MessageActionProps = {
   util: IUtilState
@@ -13,11 +14,28 @@ export type MessageActionProps = {
   hideMessageAction(): void
 }
 
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+    backgroundColor: '#fff',
+    height: '100vh',
+    display: 'flex',
+    // alignContent: 'center',
+    // justifyContent: 'center',
+    flexDirection: 'column'
+  }
+})
+
 const App: React.SFC<MessageActionProps> = ({ util, hideMessageAction }) => {
+  const classes = useStyles()
   return (
     <div className='app-container'>
       <Message {...util.message} handleClose={hideMessageAction} />
-      <Router />
+      <Container className={classes.root} disableGutters>
+        <CssBaseline>
+          <Router />
+        </CssBaseline>
+      </Container>
     </div>
   )
 }

@@ -48,10 +48,7 @@ const useStyles = makeStyles({
   }
 })
 
-const Login: React.SFC<LoginProps & MessageActionProps> = ({
-  showMessageAction,
-  login
-}) => {
+const Login: React.SFC<LoginProps & MessageActionProps> = ({ login }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
@@ -84,10 +81,6 @@ const Login: React.SFC<LoginProps & MessageActionProps> = ({
               fullWidth
               onClick={() => {
                 login({ username, password })
-                // showMessageAction({
-                //   message: `${username}:${password}`,
-                //   type: 'success'
-                // })
               }}
             >
               Login

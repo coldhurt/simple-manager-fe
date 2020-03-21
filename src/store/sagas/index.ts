@@ -24,7 +24,9 @@ import {
   IFriendAddAction,
   USER_INFO,
   CHAT_BOX_LIST,
-  IChatBoxListAction
+  IChatBoxListAction,
+  UPDATE_USER_INFO,
+  IUpdateUserInfoAction
 } from '../user/types'
 import {
   loginSuccessAction,
@@ -37,11 +39,14 @@ import {
   friendAddFailedAction,
   userInfoSuccessAction,
   chatBoxListSuccessAction,
-  chatBoxListFailedAction
+  chatBoxListFailedAction,
+  updateUserInfoSuccessAction,
+  updateUserInfoFailedAction
 } from '../user/actions'
 import { IFetchArticleAction, FETCH_ARTICLES } from '../article/types'
 import { fetchArticlesFailed, fetchArticlesSuccess } from '../article/actions'
 import { Post } from '../../utils'
+import { message } from 'antd'
 
 function myFetch(url: string, body?: Object) {
   return Post(url, body)
@@ -92,8 +97,11 @@ function* login(action: ILoginAction) {
         if (url) {
           location.href = url[1]
         }
+      } else {
+        location.href = '/NewIM'
       }
     } else {
+      message.error(json.msg)
       yield put(loginFailedAction(json.msg))
     }
   } catch (e) {
@@ -161,6 +169,16 @@ function* fetchChatBoxMessage(action: IChatBoxListAction) {
   }
 }
 
+function* updateUserInfo(action: IUpdateUserInfoAction) {
+  try {
+    const json = yield call(myFetch, '/api/admin/update', action.data)
+    action.callback(json)
+    yield put(updateUserInfoSuccessAction(json.data))
+  } catch (e) {
+    yield put(updateUserInfoFailedAction(e.message))
+  }
+}
+
 function* rootSaga() {
   yield takeLatest(FETCH_CLIENTS, getAllClients)
   yield takeLatest(ADD_CLIENT, addClient)
@@ -173,6 +191,7 @@ function* rootSaga() {
   yield takeLatest(FRIEND_ADD, addFriend)
   yield takeLatest(USER_INFO, fetchUserInfo)
   yield takeLatest(CHAT_BOX_LIST, fetchChatBoxMessage)
+  yield takeLatest(UPDATE_USER_INFO, updateUserInfo)
 }
 
 export default rootSaga

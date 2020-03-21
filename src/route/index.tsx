@@ -5,7 +5,7 @@ import AdminPage from '../view/Admin'
 import { NotFound, LazyLoadModule } from '../components'
 
 interface IRouteItem {
-  path: string
+  path: string | string[]
   component:
     | React.ComponentClass<any>
     | React.FC<any>
@@ -95,17 +95,45 @@ const routes: IRouteItem[] = [
     )
   },
   {
-    path: '/im',
+    path: ['/NewIM/chat/:id'],
     exact: true,
     component: (props: Object) => (
-      <LazyLoadModule {...props} resolve={() => import('../view/IM/Index')} />
+      <LazyLoadModule {...props} resolve={() => import('../view/NewIM/Chat')} />
     )
   },
   {
-    path: '/404',
+    path: ['/NewIM/:tab', '/NewIM'],
     exact: true,
-    component: NotFound
+    component: (props: Object) => (
+      <LazyLoadModule {...props} resolve={() => import('../view/NewIM')} />
+    )
+  },
+  {
+    path: ['/NewIM/user/info'],
+    exact: true,
+    component: (props: Object) => (
+      <LazyLoadModule
+        {...props}
+        resolve={() => import('../view/NewIM/User/UserInfo')}
+      />
+    )
+  },
+  {
+    path: ['/NewIM/user/info/nickname'],
+    exact: true,
+    component: (props: Object) => (
+      <LazyLoadModule
+        {...props}
+        resolve={() => import('../view/NewIM/User/ChangeNickName')}
+      />
+    )
   }
+
+  // {
+  //   path: '*',
+  //   exact: true,
+  //   component: NotFound
+  // }
 ]
 
 const PrivateRoute: React.FC<IRouteItem> = ({
@@ -137,6 +165,9 @@ function AllRoute() {
         {routes.map((route, i) => (
           <PrivateRoute key={i} {...route} />
         ))}
+        {/* <Route path='*'>
+          <NotFound />
+        </Route> */}
       </div>
     </Router>
   )

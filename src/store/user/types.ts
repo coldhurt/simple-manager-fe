@@ -16,6 +16,10 @@ export const FRIEND_ADD_SUCCESS = 'FRIEND_ADD_SUCCESS'
 export const CHAT_BOX_LIST = 'CHAT_BOX_LIST'
 export const CHAT_BOX_LIST_FAILED = 'CHAT_BOX_LIST_FAILED'
 export const CHAT_BOX_LIST_SUCCESS = 'CHAT_BOX_LIST_SUCCESS'
+export const CHAT_BOX_ADD_MESSAGE = 'CHAT_BOX_ADD_MESSAGE'
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO'
+export const UPDATE_USER_INFO_FAILED = 'UPDATE_USER_INFO_FAILED'
+export const UPDATE_USER_INFO_SUCCESS = 'UPDATE_USER_INFO_SUCCESS'
 
 export interface IUserState {
   loading: boolean
@@ -35,10 +39,10 @@ export interface IUserState {
 
 export interface IAdmin {
   avatar?: string
-  username: string
+  username?: string
   password?: string
   nickname?: string
-  _id: string
+  _id?: string
   createdAt?: string
   lastMsg?: string
 }
@@ -139,6 +143,27 @@ export interface IChatBoxListFailedAction {
   error: string
 }
 
+export interface IChatBoxAddMessageAction {
+  type: typeof CHAT_BOX_ADD_MESSAGE
+  data: IMessage
+}
+
+export interface IUpdateUserInfoAction {
+  type: typeof UPDATE_USER_INFO
+  data: IAdmin
+  callback: Function
+}
+
+export interface IUpdateUserInfoFailedAction {
+  type: typeof UPDATE_USER_INFO_FAILED
+  error: string
+}
+
+export interface IUpdateUserInfoSuccessAction {
+  type: typeof UPDATE_USER_INFO_SUCCESS
+  data: IAdmin
+}
+
 export type IUserAction =
   | ILoginAction
   | ILoginSuccessAction
@@ -158,3 +183,7 @@ export type IUserAction =
   | IChatBoxListAction
   | IChatBoxListFailedAction
   | IChatBoxListSuccessAction
+  | IChatBoxAddMessageAction
+  | IUpdateUserInfoAction
+  | IUpdateUserInfoSuccessAction
+  | IUpdateUserInfoFailedAction

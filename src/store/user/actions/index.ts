@@ -18,7 +18,11 @@ import {
   CHAT_BOX_LIST_FAILED,
   CHAT_BOX_LIST,
   CHAT_BOX_LIST_SUCCESS,
-  IMessage
+  IMessage,
+  CHAT_BOX_ADD_MESSAGE,
+  UPDATE_USER_INFO,
+  UPDATE_USER_INFO_FAILED,
+  UPDATE_USER_INFO_SUCCESS
 } from '../types'
 
 // login action creators
@@ -142,6 +146,35 @@ export const chatBoxListFailedAction = (error: string) => {
 export const chatBoxListSuccessAction = (data: IMessage[]) => {
   return {
     type: CHAT_BOX_LIST_SUCCESS,
+    data
+  }
+}
+
+export const chatBoxAddMessageAction = (data: IMessage) => {
+  return {
+    type: CHAT_BOX_ADD_MESSAGE,
+    data
+  }
+}
+
+export const updateUserInfoAction = (data: IAdmin, callback: Function) => {
+  return {
+    type: UPDATE_USER_INFO,
+    data,
+    callback
+  }
+}
+
+export const updateUserInfoFailedAction = (error: string) => {
+  return {
+    type: UPDATE_USER_INFO_FAILED,
+    error
+  }
+}
+
+export const updateUserInfoSuccessAction = (data: IAdmin) => {
+  return {
+    type: UPDATE_USER_INFO_SUCCESS,
     data
   }
 }

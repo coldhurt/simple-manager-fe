@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 function Index() {
   React.useEffect(() => {
-    window.location.href = '/im'
+    window.location.href = '/NewIM'
   })
   return <div></div>
 }

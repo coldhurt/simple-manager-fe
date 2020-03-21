@@ -18,7 +18,11 @@ import {
   USER_INFO_FAILED,
   CHAT_BOX_LIST,
   CHAT_BOX_LIST_FAILED,
-  CHAT_BOX_LIST_SUCCESS
+  CHAT_BOX_LIST_SUCCESS,
+  CHAT_BOX_ADD_MESSAGE,
+  UPDATE_USER_INFO_SUCCESS,
+  UPDATE_USER_INFO_FAILED,
+  UPDATE_USER_INFO
 } from '../types'
 
 const DEFAULT_USER_STATE: IUserState = {
@@ -142,6 +146,28 @@ export default function userReducer(
         ...state,
         loading: false,
         chatboxMessage: action.data
+      }
+    case CHAT_BOX_ADD_MESSAGE:
+      return {
+        ...state,
+        chatboxMessage: state.chatboxMessage.concat(action.data)
+      }
+    case UPDATE_USER_INFO:
+      return {
+        ...state,
+        loading: true
+      }
+    case UPDATE_USER_INFO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        userInfo: { ...state.userInfo, ...action.data }
+      }
+    case UPDATE_USER_INFO_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
       }
     default:
       return state
