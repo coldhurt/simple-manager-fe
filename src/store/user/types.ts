@@ -10,6 +10,12 @@ export const USER_LIST_SUCCESS = 'USER_LIST_SUCCESS'
 export const FRIEND_LIST = 'FRIEND_LIST'
 export const FRIEND_LIST_FAILED = 'FRIEND_LIST_FAILED'
 export const FRIEND_LIST_SUCCESS = 'FRIEND_LIST_SUCCESS'
+export const IM_SESSION_LIST = 'IM_SESSION_LIST'
+export const IM_SESSION_LIST_FAILED = 'IM_SESSION_LIST_FAILED'
+export const IM_SESSION_LIST_SUCCESS = 'IM_SESSION_LIST_SUCCESS'
+export const IM_SESSION_ADD = 'IM_SESSION_ADD'
+export const IM_SESSION_ADD_FAILED = 'IM_SESSION_ADD_FAILED'
+export const IM_SESSION_ADD_SUCCESS = 'IM_SESSION_ADD_SUCCESS'
 export const FRIEND_ADD = 'FRIEND_ADD'
 export const FRIEND_ADD_FAILED = 'FRIEND_ADD_FAILED'
 export const FRIEND_ADD_SUCCESS = 'FRIEND_ADD_SUCCESS'
@@ -35,6 +41,7 @@ export interface IUserState {
   users: IAdmin[]
   friends: IAdmin[]
   chatboxMessage: IMessage[]
+  imSessions: IMSession[]
 }
 
 export interface IAdmin {
@@ -54,6 +61,14 @@ export interface IMessage {
   type: number
   createdAt: string
   _id: string
+}
+
+export interface IMSession {
+  _id?: string
+  lastMessage?: IMessage
+  user_id: string
+  friend_id: string
+  type: number // 1: 个人  2: 群组
 }
 
 export interface ILoginAction {
@@ -128,6 +143,38 @@ export interface IFriendAddFailedAction {
   error: string
 }
 
+export interface IIMSessionListAction {
+  type: typeof IM_SESSION_LIST
+}
+
+export interface IIMSessionListSuccessAction {
+  type: typeof IM_SESSION_LIST_SUCCESS
+  data: IMSession[]
+}
+
+export interface IIMSessionListFailedAction {
+  type: typeof IM_SESSION_LIST_FAILED
+  error: string
+}
+
+export interface IIMSessionAddAction {
+  type: typeof IM_SESSION_ADD
+  data: {
+    friend_id: string
+    type?: number
+  }
+}
+
+export interface IIMSessionAddSuccessAction {
+  type: typeof IM_SESSION_ADD_SUCCESS
+  data: IMSession
+}
+
+export interface IIMSessionAddFailedAction {
+  type: typeof IM_SESSION_ADD_FAILED
+  error: string
+}
+
 export interface IChatBoxListAction {
   type: typeof CHAT_BOX_LIST
   friend_id: string
@@ -187,3 +234,9 @@ export type IUserAction =
   | IUpdateUserInfoAction
   | IUpdateUserInfoSuccessAction
   | IUpdateUserInfoFailedAction
+  | IIMSessionAddAction
+  | IIMSessionAddFailedAction
+  | IIMSessionAddSuccessAction
+  | IIMSessionListAction
+  | IIMSessionListSuccessAction
+  | IIMSessionListFailedAction

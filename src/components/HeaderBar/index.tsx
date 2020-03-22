@@ -46,7 +46,10 @@ const HeaderBar: React.SFC<HeaderBarProps> = ({
     if (backTo) {
       history.push(backTo)
     } else if (typeof onBack === 'function') {
-      if (onBack()) history.goBack()
+      if (onBack()) {
+        if (backTo) history.push(backTo)
+        else history.goBack()
+      }
     } else {
       history.goBack()
     }

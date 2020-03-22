@@ -22,7 +22,13 @@ import {
   CHAT_BOX_ADD_MESSAGE,
   UPDATE_USER_INFO_SUCCESS,
   UPDATE_USER_INFO_FAILED,
-  UPDATE_USER_INFO
+  UPDATE_USER_INFO,
+  IM_SESSION_ADD,
+  IM_SESSION_ADD_FAILED,
+  IM_SESSION_ADD_SUCCESS,
+  IM_SESSION_LIST,
+  IM_SESSION_LIST_SUCCESS,
+  IM_SESSION_LIST_FAILED
 } from '../types'
 
 const DEFAULT_USER_STATE: IUserState = {
@@ -37,7 +43,8 @@ const DEFAULT_USER_STATE: IUserState = {
   userInfo: null,
   users: [],
   friends: [],
-  chatboxMessage: []
+  chatboxMessage: [],
+  imSessions: []
 }
 
 export default function userReducer(
@@ -129,6 +136,40 @@ export default function userReducer(
         ...state,
         addFriendLoading: false,
         friends: state.friends.concat(action.friends)
+      }
+    case IM_SESSION_LIST:
+      return {
+        ...state,
+        loading: true
+      }
+    case IM_SESSION_LIST_SUCCESS:
+      return {
+        ...state,
+        imSessions: action.data,
+        loading: false
+      }
+    case IM_SESSION_LIST_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      }
+    case IM_SESSION_ADD:
+      return {
+        ...state,
+        loading: true
+      }
+    case IM_SESSION_ADD_SUCCESS:
+      return {
+        ...state,
+        imSessions: [...state.imSessions, action.data],
+        loading: false
+      }
+    case IM_SESSION_ADD_FAILED:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
       }
     case CHAT_BOX_LIST:
       return {

@@ -57,7 +57,12 @@ const UserInfo: React.SFC<UserInfoProps> = ({ userInfo, getUserInfo }) => {
       <div>
         {userInfo && (
           <Container disableGutters className={classes.root}>
-            <HeaderBar title={'修改个人信息'} showBack={true} onBack={onBack} />
+            <HeaderBar
+              title={'修改个人信息'}
+              showBack={true}
+              onBack={onBack}
+              backTo='/NewIM/user'
+            />
             <List className={classes.content}>
               <ListItem button>
                 <ListItemText primary='头像' />

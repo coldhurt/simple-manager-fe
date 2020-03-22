@@ -62,7 +62,7 @@ const ChangeNickName: React.SFC<ChangeNickNameProps> = ({
             <HeaderBar
               title={'修改昵称'}
               showBack={true}
-              backTo='/NewIM/user'
+              backTo='/NewIM/user/info'
               rightText='保存'
               onRight={onSave}
             />

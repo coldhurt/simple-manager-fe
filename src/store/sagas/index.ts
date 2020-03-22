@@ -26,7 +26,11 @@ import {
   CHAT_BOX_LIST,
   IChatBoxListAction,
   UPDATE_USER_INFO,
-  IUpdateUserInfoAction
+  IUpdateUserInfoAction,
+  IIMSessionListAction,
+  IM_SESSION_LIST,
+  IIMSessionAddAction,
+  IM_SESSION_ADD
 } from '../user/types'
 import {
   loginSuccessAction,
@@ -41,7 +45,11 @@ import {
   chatBoxListSuccessAction,
   chatBoxListFailedAction,
   updateUserInfoSuccessAction,
-  updateUserInfoFailedAction
+  updateUserInfoFailedAction,
+  imSessionListSuccessAction,
+  imSessionListFailedAction,
+  imSessionAddSuccessAction,
+  imSessionAddFailedAction
 } from '../user/actions'
 import { IFetchArticleAction, FETCH_ARTICLES } from '../article/types'
 import { fetchArticlesFailed, fetchArticlesSuccess } from '../article/actions'
@@ -111,9 +119,8 @@ function* login(action: ILoginAction) {
 
 function* fetchUserList(action: IUserListAction) {
   try {
-    const res = yield call(myFetch, '/api/admin/list')
-    const userRes = yield res.json()
-    yield put(userListSuccessAction(userRes.data))
+    const json = yield call(myFetch, '/api/admin/list')
+    yield put(userListSuccessAction(json.data))
   } catch (e) {
     yield put(userListFailedAction(e.message))
   }
@@ -121,9 +128,8 @@ function* fetchUserList(action: IUserListAction) {
 
 function* fetchArticleList(action: IFetchArticleAction) {
   try {
-    const res = yield call(myFetch, '/api/article/list')
-    const userRes = yield res.json()
-    yield put(fetchArticlesSuccess(userRes.data))
+    const json = yield call(myFetch, '/api/article/list')
+    yield put(fetchArticlesSuccess(json.data))
   } catch (e) {
     yield put(fetchArticlesFailed(e.message))
   }
@@ -179,6 +185,24 @@ function* updateUserInfo(action: IUpdateUserInfoAction) {
   }
 }
 
+function* fetchSessionList(action: IIMSessionListAction) {
+  try {
+    const json = yield call(myFetch, '/api/session/list')
+    yield put(imSessionListSuccessAction(json.data))
+  } catch (e) {
+    yield put(imSessionListFailedAction(e.message))
+  }
+}
+
+function* addSession(action: IIMSessionAddAction) {
+  try {
+    const json = yield call(myFetch, '/api/session/add', action.data)
+    yield put(imSessionAddSuccessAction(json.data))
+  } catch (e) {
+    yield put(imSessionAddFailedAction(e.message))
+  }
+}
+
 function* rootSaga() {
   yield takeLatest(FETCH_CLIENTS, getAllClients)
   yield takeLatest(ADD_CLIENT, addClient)
@@ -192,6 +216,8 @@ function* rootSaga() {
   yield takeLatest(USER_INFO, fetchUserInfo)
   yield takeLatest(CHAT_BOX_LIST, fetchChatBoxMessage)
   yield takeLatest(UPDATE_USER_INFO, updateUserInfo)
+  yield takeLatest(IM_SESSION_LIST, fetchSessionList)
+  yield takeLatest(IM_SESSION_ADD, addSession)
 }
 
 export default rootSaga

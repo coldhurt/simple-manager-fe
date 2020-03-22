@@ -109,6 +109,16 @@ const routes: IRouteItem[] = [
     )
   },
   {
+    path: ['/NewIM/friends/add'],
+    exact: true,
+    component: (props: Object) => (
+      <LazyLoadModule
+        {...props}
+        resolve={() => import('../view/NewIM/Friends/AddFriend')}
+      />
+    )
+  },
+  {
     path: ['/NewIM/user/info'],
     exact: true,
     component: (props: Object) => (

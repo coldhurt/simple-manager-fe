@@ -1,24 +1,31 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../../../store'
-import { friendListAction } from '../../../store/user/actions'
-import { IAdmin } from '../../../store/user/types'
+import {
+  friendListAction,
+  imSessionAddAction
+} from '../../../store/user/actions'
+import { IAdmin, IMSession } from '../../../store/user/types'
 import {
   Avatar,
   makeStyles,
   ListItem,
   ListItemIcon,
   ListItemText,
-  List
+  List,
+  Fab
 } from '@material-ui/core'
 import {
   Link as RouterLink,
-  LinkProps as RouterLinkProps
+  LinkProps as RouterLinkProps,
+  Link
 } from 'react-router-dom'
+import AddIcon from '@material-ui/icons/Add'
 
 interface FriendsProps {
   friends: IAdmin[]
   friendList(): void
+  sessionAdd(session: { friend_id: string }): void
 }
 
 const useStyles = makeStyles({
@@ -29,14 +36,20 @@ const useStyles = makeStyles({
     marginRight: '3vw',
     width: '10vw',
     height: '10vw'
+  },
+  add: {
+    position: 'fixed',
+    right: 10,
+    bottom: 70
   }
 })
 
 interface FriendItemProps {
   friend: IAdmin
+  sessionAdd(session: { friend_id: string }): void
 }
 
-const FriendItem: React.SFC<FriendItemProps> = ({ friend }) => {
+const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
   const classes = useStyles()
   const { _id, avatar, username, nickname } = friend
   const renderLink = React.useMemo(
@@ -49,7 +62,11 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend }) => {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
+      <ListItem
+        button
+        component={renderLink}
+        onClick={() => sessionAdd({ friend_id: _id || '' })}
+      >
         <ListItemIcon>
           <Avatar src={avatar} className={classes.avatar} />
         </ListItemIcon>
@@ -59,17 +76,28 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend }) => {
   )
 }
 
-const Friends: React.SFC<FriendsProps> = ({ friends, friendList }) => {
+const Friends: React.SFC<FriendsProps> = ({
+  friends,
+  friendList,
+  sessionAdd
+}) => {
   React.useEffect(() => {
     friendList()
   }, [friendList])
   const classes = useStyles()
   return (
-    <List className={classes.root}>
-      {friends.map(item => (
-        <FriendItem key={item._id} friend={item} />
-      ))}
-    </List>
+    <div>
+      <List className={classes.root}>
+        {friends.map(item => (
+          <FriendItem key={item._id} friend={item} sessionAdd={sessionAdd} />
+        ))}
+      </List>
+      <Link to='/NewIM/friends/add'>
+        <Fab color='primary' aria-label='add' className={classes.add}>
+          <AddIcon />
+        </Fab>
+      </Link>
+    </div>
   )
 }
 
@@ -78,6 +106,7 @@ const mapStateToProps = (state: AppState) => ({
 })
 
 const mapDispatchToProps = {
-  friendList: friendListAction
+  friendList: friendListAction,
+  sessionAdd: imSessionAddAction
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Friends)

@@ -22,7 +22,14 @@ import {
   CHAT_BOX_ADD_MESSAGE,
   UPDATE_USER_INFO,
   UPDATE_USER_INFO_FAILED,
-  UPDATE_USER_INFO_SUCCESS
+  UPDATE_USER_INFO_SUCCESS,
+  IM_SESSION_LIST,
+  IM_SESSION_LIST_FAILED,
+  IMSession,
+  IM_SESSION_LIST_SUCCESS,
+  IM_SESSION_ADD,
+  IM_SESSION_ADD_FAILED,
+  IM_SESSION_ADD_SUCCESS
 } from '../types'
 
 // login action creators
@@ -175,6 +182,48 @@ export const updateUserInfoFailedAction = (error: string) => {
 export const updateUserInfoSuccessAction = (data: IAdmin) => {
   return {
     type: UPDATE_USER_INFO_SUCCESS,
+    data
+  }
+}
+
+// im sessions action creators
+export const imSessionListAction = () => {
+  return {
+    type: IM_SESSION_LIST
+  }
+}
+
+export const imSessionListFailedAction = (error: string) => {
+  return {
+    type: IM_SESSION_LIST_FAILED,
+    error
+  }
+}
+
+export const imSessionListSuccessAction = (data: IMSession[]) => {
+  return {
+    type: IM_SESSION_LIST_SUCCESS,
+    data
+  }
+}
+
+export const imSessionAddAction = (data: IMSession) => {
+  return {
+    type: IM_SESSION_ADD,
+    data
+  }
+}
+
+export const imSessionAddFailedAction = (error: string) => {
+  return {
+    type: IM_SESSION_ADD_FAILED,
+    error
+  }
+}
+
+export const imSessionAddSuccessAction = (data: IMSession[]) => {
+  return {
+    type: IM_SESSION_ADD_SUCCESS,
     data
   }
 }
