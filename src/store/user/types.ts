@@ -26,6 +26,9 @@ export const CHAT_BOX_ADD_MESSAGE = 'CHAT_BOX_ADD_MESSAGE'
 export const UPDATE_USER_INFO = 'UPDATE_USER_INFO'
 export const UPDATE_USER_INFO_FAILED = 'UPDATE_USER_INFO_FAILED'
 export const UPDATE_USER_INFO_SUCCESS = 'UPDATE_USER_INFO_SUCCESS'
+export const USER_REGISTER = 'USER_REGISTER'
+export const USER_REGISTER_SUCCESS = 'USER_REGISTER_SUCCESS'
+export const USER_REGISTER_FAILED = 'USER_REGISTER_FAILED'
 
 export interface IUserState {
   loading: boolean
@@ -71,6 +74,28 @@ export interface IMSession {
   type: number // 1: 个人  2: 群组
 }
 
+export interface IRegister {
+  username: string
+  password: string
+  confirmPassword: string
+}
+
+export interface IRegisterAction {
+  type: typeof USER_REGISTER
+  data: IRegister
+  callback: Function
+}
+
+export interface IRegisterSuccessAction {
+  type: typeof USER_REGISTER_SUCCESS
+  data: IAdmin
+}
+
+export interface IRegisterFailedAction {
+  type: typeof USER_REGISTER_FAILED
+  error: string
+}
+
 export interface ILoginAction {
   type: typeof USER_LOGIN
   admin: IAdmin
@@ -102,6 +127,7 @@ export interface IUserInfoFailedAction {
 
 export interface IUserListAction {
   type: typeof USER_LIST
+  nickname: string
 }
 
 export interface IUserListSuccessAction {
@@ -240,3 +266,6 @@ export type IUserAction =
   | IIMSessionListAction
   | IIMSessionListSuccessAction
   | IIMSessionListFailedAction
+  | IRegisterAction
+  | IRegisterFailedAction
+  | IRegisterSuccessAction

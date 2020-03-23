@@ -28,7 +28,10 @@ import {
   IM_SESSION_ADD_SUCCESS,
   IM_SESSION_LIST,
   IM_SESSION_LIST_SUCCESS,
-  IM_SESSION_LIST_FAILED
+  IM_SESSION_LIST_FAILED,
+  USER_REGISTER,
+  USER_REGISTER_SUCCESS,
+  USER_REGISTER_FAILED
 } from '../types'
 
 const DEFAULT_USER_STATE: IUserState = {
@@ -52,6 +55,23 @@ export default function userReducer(
   action: IUserAction
 ): IUserState {
   switch (action.type) {
+    case USER_REGISTER:
+      return {
+        ...state,
+        loading: true
+      }
+    case USER_REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      }
+    case USER_REGISTER_FAILED:
+      return {
+        ...state,
+        error: action.error,
+        loading: false
+      }
+
     case USER_LOGIN:
       return {
         ...state,

@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { AppState } from '../../../store'
-import { imSessionListAction } from '../../../store/user/actions'
+import {
+  imSessionListAction,
+  friendListAction
+} from '../../../store/user/actions'
 import { IAdmin, IMSession } from '../../../store/user/types'
 import {
   Avatar,
@@ -19,6 +22,8 @@ import {
 interface FriendsProps {
   imSessions: IMSession[]
   sessionList(): void
+  friends: IAdmin[]
+  friendList(): void
 }
 
 const useStyles = makeStyles({
@@ -34,9 +39,10 @@ const useStyles = makeStyles({
 
 interface SessionItemProps {
   session: IMSession
+  avatars: Map<string, IAdmin>
 }
 
-const SessionItem: React.SFC<SessionItemProps> = ({ session }) => {
+const SessionItem: React.SFC<SessionItemProps> = ({ session, avatars }) => {
   const classes = useStyles()
   const { friend_id, lastMessage } = session
   const renderLink = React.useMemo(
@@ -46,15 +52,16 @@ const SessionItem: React.SFC<SessionItemProps> = ({ session }) => {
       )),
     [friend_id]
   )
+  const user = avatars.get(friend_id)
 
   return (
     <li>
       <ListItem button component={renderLink}>
         <ListItemIcon>
-          <Avatar src={''} className={classes.avatar} />
+          <Avatar src={user ? user.avatar : ''} className={classes.avatar} />
         </ListItemIcon>
         <ListItemText
-          primary={friend_id}
+          primary={user ? user.nickname || user.username : friend_id}
           secondary={lastMessage ? lastMessage.message : ''}
         />
       </ListItem>
@@ -62,25 +69,37 @@ const SessionItem: React.SFC<SessionItemProps> = ({ session }) => {
   )
 }
 
-const MessageList: React.SFC<FriendsProps> = ({ imSessions, sessionList }) => {
+const MessageList: React.SFC<FriendsProps> = ({
+  imSessions,
+  sessionList,
+  friends,
+  friendList
+}) => {
   React.useEffect(() => {
     sessionList()
-  }, [sessionList])
+    friendList()
+  }, [])
   const classes = useStyles()
+  const avatars = new Map()
+  for (const f of friends) {
+    if (f && f._id) avatars.set(f._id, f)
+  }
   return (
     <List className={classes.root}>
       {imSessions.map(item => (
-        <SessionItem key={item._id} session={item} />
+        <SessionItem key={item._id} session={item} avatars={avatars} />
       ))}
     </List>
   )
 }
 
 const mapStateToProps = (state: AppState) => ({
-  imSessions: state.users.imSessions
+  imSessions: state.users.imSessions,
+  friends: state.users.friends
 })
 
 const mapDispatchToProps = {
-  sessionList: imSessionListAction
+  sessionList: imSessionListAction,
+  friendList: friendListAction
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MessageList)

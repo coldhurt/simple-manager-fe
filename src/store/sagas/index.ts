@@ -30,7 +30,9 @@ import {
   IIMSessionListAction,
   IM_SESSION_LIST,
   IIMSessionAddAction,
-  IM_SESSION_ADD
+  IM_SESSION_ADD,
+  IRegisterAction,
+  USER_REGISTER
 } from '../user/types'
 import {
   loginSuccessAction,
@@ -49,7 +51,9 @@ import {
   imSessionListSuccessAction,
   imSessionListFailedAction,
   imSessionAddSuccessAction,
-  imSessionAddFailedAction
+  imSessionAddFailedAction,
+  registerSuccessAction,
+  registerFailedAction
 } from '../user/actions'
 import { IFetchArticleAction, FETCH_ARTICLES } from '../article/types'
 import { fetchArticlesFailed, fetchArticlesSuccess } from '../article/actions'
@@ -119,7 +123,9 @@ function* login(action: ILoginAction) {
 
 function* fetchUserList(action: IUserListAction) {
   try {
-    const json = yield call(myFetch, '/api/admin/list')
+    const json = yield call(myFetch, '/api/admin/list', {
+      nickname: action.nickname
+    })
     yield put(userListSuccessAction(json.data))
   } catch (e) {
     yield put(userListFailedAction(e.message))
@@ -149,6 +155,9 @@ function* addFriend(action: IFriendAddAction) {
     const json = yield call(myFetch, '/api/friend/add', {
       friend_id: action.friend_id
     })
+    if (json.success) {
+      message.success('添加成功')
+    }
     yield put(friendAddSuccessAction(json.data))
   } catch (e) {
     yield put(friendAddFailedAction(e.message))
@@ -203,6 +212,16 @@ function* addSession(action: IIMSessionAddAction) {
   }
 }
 
+function* register(action: IRegisterAction) {
+  try {
+    const json = yield call(myFetch, '/api/admin/register', action.data)
+    action.callback(json)
+    yield put(registerSuccessAction(json.data))
+  } catch (e) {
+    yield put(registerFailedAction(e.message))
+  }
+}
+
 function* rootSaga() {
   yield takeLatest(FETCH_CLIENTS, getAllClients)
   yield takeLatest(ADD_CLIENT, addClient)
@@ -218,6 +237,7 @@ function* rootSaga() {
   yield takeLatest(UPDATE_USER_INFO, updateUserInfo)
   yield takeLatest(IM_SESSION_LIST, fetchSessionList)
   yield takeLatest(IM_SESSION_ADD, addSession)
+  yield takeLatest(USER_REGISTER, register)
 }
 
 export default rootSaga

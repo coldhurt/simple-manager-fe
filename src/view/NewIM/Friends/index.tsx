@@ -24,6 +24,7 @@ import AddIcon from '@material-ui/icons/Add'
 
 interface FriendsProps {
   friends: IAdmin[]
+  imSessions: IMSession[]
   friendList(): void
   sessionAdd(session: { friend_id: string }): void
 }
@@ -79,17 +80,23 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
 const Friends: React.SFC<FriendsProps> = ({
   friends,
   friendList,
-  sessionAdd
+  sessionAdd,
+  imSessions
 }) => {
   React.useEffect(() => {
     friendList()
   }, [friendList])
   const classes = useStyles()
+  const onAddSession = (data: { friend_id: string }) => {
+    if (imSessions.filter(i => i.friend_id === data.friend_id).length === 0) {
+      sessionAdd(data)
+    }
+  }
   return (
     <div>
       <List className={classes.root}>
         {friends.map(item => (
-          <FriendItem key={item._id} friend={item} sessionAdd={sessionAdd} />
+          <FriendItem key={item._id} friend={item} sessionAdd={onAddSession} />
         ))}
       </List>
       <Link to='/NewIM/friends/add'>
@@ -102,7 +109,8 @@ const Friends: React.SFC<FriendsProps> = ({
 }
 
 const mapStateToProps = (state: AppState) => ({
-  friends: state.users.friends
+  friends: state.users.friends,
+  imSessions: state.users.imSessions
 })
 
 const mapDispatchToProps = {

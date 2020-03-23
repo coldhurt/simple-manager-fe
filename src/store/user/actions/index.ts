@@ -29,8 +29,35 @@ import {
   IM_SESSION_LIST_SUCCESS,
   IM_SESSION_ADD,
   IM_SESSION_ADD_FAILED,
-  IM_SESSION_ADD_SUCCESS
+  IM_SESSION_ADD_SUCCESS,
+  USER_REGISTER,
+  IRegister,
+  USER_REGISTER_FAILED,
+  USER_REGISTER_SUCCESS
 } from '../types'
+
+// register action creators
+export const registerAction = (data: IRegister, callback: Function) => {
+  return {
+    type: USER_REGISTER,
+    data,
+    callback
+  }
+}
+
+export const registerFailedAction = (error: string) => {
+  return {
+    type: USER_REGISTER_FAILED,
+    error
+  }
+}
+
+export const registerSuccessAction = (data: IAdmin) => {
+  return {
+    type: USER_REGISTER_SUCCESS,
+    data
+  }
+}
 
 // login action creators
 export const loginAction = (admin: IAdmin) => {
@@ -74,9 +101,10 @@ export const userInfoSuccessAction = (data: IAdmin) => {
   }
 }
 // user list creators
-export const userListAction = () => {
+export const userListAction = (nickname: string) => {
   return {
-    type: USER_LIST
+    type: USER_LIST,
+    nickname
   }
 }
 

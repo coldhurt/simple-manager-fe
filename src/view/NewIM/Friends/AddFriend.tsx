@@ -7,7 +7,6 @@ import {
   ListItemIcon,
   ListItemText,
   Avatar,
-  CircularProgress,
   makeStyles,
   Button
 } from '@material-ui/core'
@@ -22,7 +21,7 @@ import {
 } from '../../../store/user/actions'
 import { AppState } from '../../../store'
 import { connect } from 'react-redux'
-import { message, Modal } from 'antd'
+import { Modal } from 'antd'
 
 const useStyles = makeStyles({
   root: {
@@ -40,7 +39,7 @@ interface AddFriendProps {
   users: IAdmin[]
   friendAdd(friend_id: string): void
   getUserInfo(): void
-  userList(name?: string): void
+  userList(nickname?: string): void
 }
 
 interface FriendItemProps {
@@ -100,6 +99,8 @@ const AddFriend: React.SFC<AddFriendProps> = ({
                 <TextField
                   value={text}
                   onChange={e => setText(e.target.value)}
+                  fullWidth
+                  placeholder='根据昵称搜索'
                 />
                 <Button
                   style={{ marginLeft: 10 }}

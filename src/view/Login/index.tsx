@@ -12,7 +12,6 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core'
-import './login.css'
 import { MessageActionProps } from '../../App'
 import { showMessageAction } from '../../store/util/actions'
 
@@ -106,7 +105,7 @@ const mapDispatchToProps = {
 const LoginForm = connect(mapStateToProps, mapDispatchToProps)(Login)
 
 export default {
-  name: 'user',
+  name: 'login',
   reducers: userReducer,
   view: LoginForm
 }

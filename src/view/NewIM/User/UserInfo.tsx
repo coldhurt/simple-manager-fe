@@ -8,7 +8,8 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  makeStyles
+  makeStyles,
+  Button
 } from '@material-ui/core'
 import { AppState } from '../../../store'
 import { userInfoAction } from '../../../store/user/actions'
@@ -20,6 +21,7 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps
 } from 'react-router-dom'
+import { message } from 'antd'
 
 interface UserInfoProps {
   userInfo: IAdmin | null
@@ -52,6 +54,35 @@ const UserInfo: React.SFC<UserInfoProps> = ({ userInfo, getUserInfo }) => {
       )),
     []
   )
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files[0]) {
+      console.log(files[0])
+      const file = files[0]
+      if (file.size > 1024000) {
+        message.error('图片大小不能大于1MB')
+        return
+      }
+
+      const formData = new FormData()
+      formData.append('myFile', file)
+
+      fetch('/api/admin/setAvatar', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.success) {
+            getUserInfo()
+          }
+          console.log(data)
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    }
+  }
   return (
     <Slide direction='left' in={show} mountOnEnter unmountOnExit>
       <div>
@@ -66,8 +97,20 @@ const UserInfo: React.SFC<UserInfoProps> = ({ userInfo, getUserInfo }) => {
             <List className={classes.content}>
               <ListItem button>
                 <ListItemText primary='头像' />
+                {/* <Button variant='contained' component='label'>
+                  Upload File
+                  <input type='file' style={{ display: 'none' }} />
+                </Button> */}
                 <ListItemAvatar>
-                  <Avatar src={userInfo.avatar} />
+                  <Button component='label'>
+                    <Avatar src={userInfo.avatar} />
+                    <input
+                      onChange={onChangeFile}
+                      accept='image/png, image/jpeg'
+                      type='file'
+                      style={{ display: 'none' }}
+                    />
+                  </Button>
                 </ListItemAvatar>
               </ListItem>
               <ListItem button component={renderLink}>
