@@ -104,9 +104,9 @@ const ChatMessageList: React.SFC<ChatMessageListProps> = ({
       getUserInfo()
     }
   }, [])
-  console.log(session_id)
   const messages = chatboxMessage[session_id] || []
-  console.log(messages)
+  console.log('session_id', session_id)
+  console.log('messsages', messages)
   return (
     <Grid
       container

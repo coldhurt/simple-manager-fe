@@ -7,9 +7,11 @@ import {
   friendListSuccessAction,
   chatBoxAddMessageAction,
   imSessionListAction,
-  imSessionListSuccessAction
+  imSessionListSuccessAction,
+  notificationStatusAction
 } from '../../../store/user/actions'
 import { IMSession } from '../../../store/user/types'
+import { scrollToBottom } from '../Chat/ChatMessageList'
 
 const dispatch = store.dispatch
 
@@ -18,6 +20,10 @@ let chat: SocketIOClient.Socket | null = null
 const getSocket = () => {
   if (!chat) {
     chat = io('/')
+    Notification.requestPermission(function(status) {
+      console.log(status) // 仅当值为 "granted" 时显示通知
+      store.dispatch(notificationStatusAction(status === 'granted'))
+    })
     chat.on('receive', (msg: MessageObject) => {
       console.log(msg)
       switch (msg.type) {
@@ -35,17 +41,30 @@ const getSocket = () => {
           if (msg.data && msg.data.session_id) {
             const state: AppState = store.getState()
             const imSessions = Object.create(state.users.imSessions)
-            const session = imSessions.filter(
-              (item: IMSession) => item._id === msg.data.session_id
-            )
-            if (!session) {
+            let session_index = -1
+            for (let i = 0; i < imSessions.length; i++) {
+              if (imSessions[i]._id === msg.data.session_id) {
+                session_index = i
+                break
+              }
+            }
+            if (session_index === -1) {
               dispatch(imSessionListAction())
             } else {
+              const session = Object.create(imSessions[session_index])
               session.unread++
+              imSessions[session_index] = session
               dispatch(imSessionListSuccessAction(imSessions))
             }
+            // if (state.users.notificationStatus) {
+            //   new Notification('消息', { body: msg.data.message })
+            // }
+            Notification.requestPermission(function(status) {
+              new Notification('消息', { body: msg.data.message })
+            })
+            dispatch(chatBoxAddMessageAction(msg.data))
+            scrollToBottom()
           }
-          dispatch(chatBoxAddMessageAction(msg.data))
           break
       }
     })

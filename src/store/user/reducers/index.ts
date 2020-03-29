@@ -31,7 +31,8 @@ import {
   IM_SESSION_LIST_FAILED,
   USER_REGISTER,
   USER_REGISTER_SUCCESS,
-  USER_REGISTER_FAILED
+  USER_REGISTER_FAILED,
+  NOTIFICATION_STATUS
 } from '../types'
 
 const DEFAULT_USER_STATE: IUserState = {
@@ -47,7 +48,8 @@ const DEFAULT_USER_STATE: IUserState = {
   users: [],
   friends: [],
   chatboxMessage: {},
-  imSessions: []
+  imSessions: [],
+  notificationStatus: false
 }
 
 export default function userReducer(
@@ -203,7 +205,7 @@ export default function userReducer(
         error: action.error
       }
     case CHAT_BOX_LIST_SUCCESS:
-      const chatboxMessage = state.chatboxMessage
+      const chatboxMessage = Object.create(state.chatboxMessage)
       chatboxMessage[action.session_id] = action.data
       return {
         ...state,
@@ -242,6 +244,11 @@ export default function userReducer(
         ...state,
         loading: false,
         error: action.error
+      }
+    case NOTIFICATION_STATUS:
+      return {
+        ...state,
+        notificationStatus: action.status
       }
     default:
       return state

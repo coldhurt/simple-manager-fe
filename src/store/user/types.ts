@@ -29,6 +29,7 @@ export const UPDATE_USER_INFO_SUCCESS = 'UPDATE_USER_INFO_SUCCESS'
 export const USER_REGISTER = 'USER_REGISTER'
 export const USER_REGISTER_SUCCESS = 'USER_REGISTER_SUCCESS'
 export const USER_REGISTER_FAILED = 'USER_REGISTER_FAILED'
+export const NOTIFICATION_STATUS = 'NOTIFICATION_STATUS'
 
 export interface IUserState {
   loading: boolean
@@ -45,6 +46,7 @@ export interface IUserState {
   friends: IAdmin[]
   chatboxMessage: Record<string, IMessage[]>
   imSessions: IMSession[]
+  notificationStatus: boolean
 }
 
 export interface IAdmin {
@@ -239,6 +241,11 @@ export interface IUpdateUserInfoSuccessAction {
   data: IAdmin
 }
 
+export interface INotificationStatusAction {
+  type: typeof NOTIFICATION_STATUS
+  status: boolean
+}
+
 export type IUserAction =
   | ILoginAction
   | ILoginSuccessAction
@@ -271,3 +278,4 @@ export type IUserAction =
   | IRegisterAction
   | IRegisterFailedAction
   | IRegisterSuccessAction
+  | INotificationStatusAction

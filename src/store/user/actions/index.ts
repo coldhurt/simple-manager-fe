@@ -33,7 +33,8 @@ import {
   USER_REGISTER,
   IRegister,
   USER_REGISTER_FAILED,
-  USER_REGISTER_SUCCESS
+  USER_REGISTER_SUCCESS,
+  NOTIFICATION_STATUS
 } from '../types'
 
 // register action creators
@@ -257,5 +258,12 @@ export const imSessionAddSuccessAction = (data: IMSession[]) => {
   return {
     type: IM_SESSION_ADD_SUCCESS,
     data
+  }
+}
+
+export const notificationStatusAction = (status: boolean) => {
+  return {
+    type: NOTIFICATION_STATUS,
+    status
   }
 }

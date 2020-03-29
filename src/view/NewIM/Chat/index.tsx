@@ -5,7 +5,6 @@ import { AppState } from '../../../store'
 import { connect } from 'react-redux'
 import {
   friendListAction,
-  chatBoxAddMessageAction,
   imSessionListAction
 } from '../../../store/user/actions'
 import { HeaderBar } from '../../../components'
@@ -43,8 +42,7 @@ const Chat: React.SFC<ChatProps> = ({
   friends,
   imSessions,
   friendList,
-  imSessionList,
-  chatBoxAddMessage
+  imSessionList
 }) => {
   const chat = getSocket()
 
@@ -117,7 +115,6 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = {
   friendList: friendListAction,
-  chatBoxAddMessage: chatBoxAddMessageAction,
   imSessionList: imSessionListAction
 }
 export default {
