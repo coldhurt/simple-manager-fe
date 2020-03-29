@@ -46,7 +46,7 @@ const DEFAULT_USER_STATE: IUserState = {
   userInfo: null,
   users: [],
   friends: [],
-  chatboxMessage: [],
+  chatboxMessage: {},
   imSessions: []
 }
 
@@ -203,16 +203,29 @@ export default function userReducer(
         error: action.error
       }
     case CHAT_BOX_LIST_SUCCESS:
+      const chatboxMessage = state.chatboxMessage
+      chatboxMessage[action.session_id] = action.data
       return {
         ...state,
         loading: false,
-        chatboxMessage: action.data
+        chatboxMessage
       }
     case CHAT_BOX_ADD_MESSAGE:
-      return {
-        ...state,
-        chatboxMessage: state.chatboxMessage.concat(action.data)
+      const data = action.data
+      if (data) {
+        const { session_id } = data
+        const chatboxMessage = Object.create(state.chatboxMessage)
+        if (!chatboxMessage[session_id]) {
+          chatboxMessage[session_id] = [data]
+        } else {
+          chatboxMessage[session_id].push(data)
+        }
+        return {
+          ...state,
+          chatboxMessage
+        }
       }
+      return state
     case UPDATE_USER_INFO:
       return {
         ...state,

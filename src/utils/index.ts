@@ -41,7 +41,8 @@ const Post = (url: string, body = {}) => {
             location.href = `/login?url=${location.origin}${location.pathname}`
           }
           if (json.msg) {
-            message.error(json.msg)
+            reject(new Error(json.msg))
+            // message.error(json.msg)
           }
         } else {
           resolve(json)

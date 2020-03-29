@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects'
+import { call, put, takeLatest, takeEvery, delay } from 'redux-saga/effects'
 import {
   loadedClients,
   addClientSuccess,
@@ -113,10 +113,10 @@ function* login(action: ILoginAction) {
         location.href = '/NewIM'
       }
     } else {
-      message.error(json.msg)
       yield put(loginFailedAction(json.msg))
     }
   } catch (e) {
+    message.error(e.message)
     yield put(loginFailedAction(e.message))
   }
 }
@@ -176,9 +176,9 @@ function* fetchUserInfo() {
 function* fetchChatBoxMessage(action: IChatBoxListAction) {
   try {
     const json = yield call(myFetch, '/api/message/list', {
-      friend_id: action.friend_id
+      session_id: action.session_id
     })
-    yield put(chatBoxListSuccessAction(json.data))
+    yield put(chatBoxListSuccessAction(action.session_id, json.data))
   } catch (e) {
     yield put(chatBoxListFailedAction(e.message))
   }

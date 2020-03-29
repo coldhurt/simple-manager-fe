@@ -5,7 +5,8 @@ import {
   BottomNavigationAction,
   makeStyles,
   Container,
-  Slide
+  Slide,
+  Badge
 } from '@material-ui/core'
 import MessageIcon from '@material-ui/icons/Message'
 import GroupIcon from '@material-ui/icons/Group'
@@ -13,6 +14,9 @@ import PersonIcon from '@material-ui/icons/Person'
 import Friends from './Friends'
 import Message from './Message'
 import User from './User'
+import { useSelector } from 'react-redux'
+import { AppState } from '../../store'
+import getSocket from './socket'
 
 const useStyles = makeStyles({
   content: {
@@ -72,11 +76,18 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
   location,
   history
 }) => {
+  const chat = getSocket()
   console.log(match.params, location, history)
   const { tab } = match.params
   const route = ['message', 'friends', 'user', 'chat']
   if (!route.includes(tab)) {
     history.push('/NewIM/message')
+  }
+
+  const sessions = useSelector((state: AppState) => state.users.imSessions)
+  let unread = 0
+  for (const sess of sessions) {
+    unread += sess.unread
   }
 
   const classes = useStyles()
@@ -95,7 +106,11 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
         <BottomNavigationAction
           value='message'
           label='Message'
-          icon={<MessageIcon />}
+          icon={
+            <Badge badgeContent={unread} color='secondary'>
+              <MessageIcon />
+            </Badge>
+          }
         />
         <BottomNavigationAction
           value='friends'

@@ -1,7 +1,5 @@
-import React from 'react'
-import { IUserState, IAdmin } from '../../store/user/types'
-import { IState } from '../../store/types'
-import { connect } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { loginAction } from '../../store/user/actions'
 import userReducer from '../../store/user/reducers'
 import {
@@ -10,16 +8,10 @@ import {
   CssBaseline,
   Grid,
   TextField,
-  makeStyles
+  makeStyles,
+  CircularProgress
 } from '@material-ui/core'
-import { MessageActionProps } from '../../App'
-import { showMessageAction } from '../../store/util/actions'
-
-interface LoginProps {
-  user: IUserState
-  login(auth: Object): void
-}
-
+import { AppState } from '../../store'
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -47,16 +39,21 @@ const useStyles = makeStyles({
   }
 })
 
-const Login: React.SFC<LoginProps & MessageActionProps> = ({ login }) => {
+const Login = () => {
   const classes = useStyles()
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
+  const loading = useSelector((state: AppState) => state.users.loading)
+  console.log('render Login')
+  const dispatch = useDispatch()
+  const login = useCallback(data => dispatch(loginAction(data)), [dispatch])
   return (
     <Container className={classes.root} disableGutters>
       <CssBaseline>
         <Grid container spacing={4} className={classes.form}>
           <Grid item xs={8} className={classes.item} container>
             <TextField
+              autoFocus
               value={username}
               onChange={e => setUsername(e.target.value)}
               label='username'
@@ -82,7 +79,7 @@ const Login: React.SFC<LoginProps & MessageActionProps> = ({ login }) => {
                 login({ username, password })
               }}
             >
-              Login
+              Login {loading && <CircularProgress size={20} />}
             </Button>
           </Grid>
         </Grid>
@@ -91,21 +88,8 @@ const Login: React.SFC<LoginProps & MessageActionProps> = ({ login }) => {
   )
 }
 
-const mapStateToProps = (state: IState) => {
-  return {
-    user: state.user
-  }
-}
-
-const mapDispatchToProps = {
-  login: loginAction,
-  showMessageAction
-}
-
-const LoginForm = connect(mapStateToProps, mapDispatchToProps)(Login)
-
 export default {
   name: 'login',
   reducers: userReducer,
-  view: LoginForm
+  view: Login
 }

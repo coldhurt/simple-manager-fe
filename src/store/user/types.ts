@@ -43,7 +43,7 @@ export interface IUserState {
   userInfo: IAdmin | null
   users: IAdmin[]
   friends: IAdmin[]
-  chatboxMessage: IMessage[]
+  chatboxMessage: Record<string, IMessage[]>
   imSessions: IMSession[]
 }
 
@@ -59,9 +59,8 @@ export interface IAdmin {
 
 export interface IMessage {
   message: string
-  sender: string
-  receiver: string
-  type: number
+  session_id: string
+  send: boolean
   createdAt: string
   _id: string
 }
@@ -71,6 +70,7 @@ export interface IMSession {
   lastMessage?: IMessage
   user_id: string
   friend_id: string
+  unread: number
   type: number // 1: 个人  2: 群组
 }
 
@@ -203,11 +203,12 @@ export interface IIMSessionAddFailedAction {
 
 export interface IChatBoxListAction {
   type: typeof CHAT_BOX_LIST
-  friend_id: string
+  session_id: string
 }
 
 export interface IChatBoxListSuccessAction {
   type: typeof CHAT_BOX_LIST_SUCCESS
+  session_id: string
   data: IMessage[]
 }
 
@@ -218,6 +219,7 @@ export interface IChatBoxListFailedAction {
 
 export interface IChatBoxAddMessageAction {
   type: typeof CHAT_BOX_ADD_MESSAGE
+  session_id: string
   data: IMessage
 }
 

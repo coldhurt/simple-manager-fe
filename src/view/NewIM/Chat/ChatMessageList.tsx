@@ -34,6 +34,10 @@ const useStyles = makeStyles({
     padding: 10,
     backgroundImage: 'url("/images/chatbox1.jpg")',
     backgroundSize: 'cover'
+  },
+  item: {
+    alignItems: 'center',
+    height: '10vh'
   }
 })
 
@@ -48,15 +52,16 @@ const ChatMessageItem: React.SFC<ChatMessageItemProps> = ({
   targetAvatar,
   userInfo
 }) => {
-  return userInfo && message.receiver === userInfo._id ? (
-    <Grid item container justify='flex-start' alignItems='center'>
+  const classes = useStyles()
+  return !message.send ? (
+    <Grid item container justify='flex-start' className={classes.item}>
       <Grid item>
         <Avatar src={targetAvatar} style={{ marginRight: 10 }} />
       </Grid>
       <Grid item>{message.message}</Grid>
     </Grid>
   ) : (
-    <Grid item container justify='flex-end' alignItems='center'>
+    <Grid item container justify='flex-end' className={classes.item}>
       <Grid item>{message.message}</Grid>
       <Grid item>
         <Avatar
@@ -69,40 +74,39 @@ const ChatMessageItem: React.SFC<ChatMessageItemProps> = ({
 }
 
 interface ChatMessageListProps {
-  chatboxMessage: IMessage[]
+  session_id: string
+  target: IAdmin
+  chatboxMessage: Record<string, IMessage[]>
   userInfo: IAdmin | null
-  friends: IAdmin[]
   getUserInfo(): void
   chatBoxList(friend_id: string): void
 }
 
 const ChatMessageList: React.SFC<ChatMessageListProps> = ({
+  session_id,
+  target,
   chatboxMessage,
   userInfo,
-  friends,
   getUserInfo,
   chatBoxList
 }) => {
   const classes = useStyles()
-  let targetAvatar = ''
-  const params = useParams<{ id: string }>()
-  for (const f of friends) {
-    if (f._id === params.id) {
-      targetAvatar = f.avatar || ''
-      break
-    }
-  }
+  const targetAvatar = target ? target.avatar || '' : ''
+
   React.useEffect(() => {
-    if (params.id) {
-      console.log(chatBoxList(params.id))
+    if (session_id) {
+      console.log(chatBoxList(session_id))
       scrollToBottom()
     }
-  }, [params.id, chatBoxList])
+  }, [session_id, chatBoxList])
   React.useEffect(() => {
     if (!userInfo) {
       getUserInfo()
     }
-  }, [userInfo, getUserInfo])
+  }, [])
+  console.log(session_id)
+  const messages = chatboxMessage[session_id] || []
+  console.log(messages)
   return (
     <Grid
       container
@@ -110,7 +114,7 @@ const ChatMessageList: React.SFC<ChatMessageListProps> = ({
       id='chat-box-message'
       spacing={2}
     >
-      {chatboxMessage.map(item => (
+      {messages.map(item => (
         <ChatMessageItem
           key={item._id}
           message={item}
@@ -124,8 +128,7 @@ const ChatMessageList: React.SFC<ChatMessageListProps> = ({
 
 const mapStateToProps = (state: AppState) => ({
   chatboxMessage: state.users.chatboxMessage,
-  userInfo: state.users.userInfo,
-  friends: state.users.friends
+  userInfo: state.users.userInfo
 })
 
 const mapDispatchToProps = {

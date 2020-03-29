@@ -1,16 +1,17 @@
 import { makeStyles, Container, Slide } from '@material-ui/core'
 import * as React from 'react'
-import { IMessage, IAdmin } from '../../../store/user/types'
+import { IMessage, IAdmin, IMSession } from '../../../store/user/types'
 import { AppState } from '../../../store'
 import { connect } from 'react-redux'
 import {
   friendListAction,
-  chatBoxAddMessageAction
+  chatBoxAddMessageAction,
+  imSessionListAction
 } from '../../../store/user/actions'
 import { HeaderBar } from '../../../components'
 import { useParams } from 'react-router-dom'
 import InputBar from './InputBar'
-import getSocket from './socket'
+import getSocket from '../socket/index'
 import ChatMessageList, { scrollToBottom } from './ChatMessageList'
 
 const useStyles = makeStyles({
@@ -32,42 +33,58 @@ const useStyles = makeStyles({
 
 interface ChatProps {
   friends: IAdmin[]
+  imSessions: IMSession[]
   friendList(): void
+  imSessionList(): void
   chatBoxAddMessage(message: IMessage): void
 }
 
 const Chat: React.SFC<ChatProps> = ({
   friends,
+  imSessions,
   friendList,
+  imSessionList,
   chatBoxAddMessage
 }) => {
-  const onReceive = (msg: IMessage) => {
-    chatBoxAddMessage(msg)
-    scrollToBottom()
-  }
-  const chat = getSocket(onReceive)
+  const chat = getSocket()
 
   const classes = useStyles()
 
   const params = useParams<{ id: string }>()
+  const session_id = params.id
 
-  let target = null
-  for (const f of friends) {
-    if (f._id === params.id) {
-      target = f
-      break
+  let friend_id = null
+  for (const f of imSessions) {
+    if (f._id === session_id) {
+      friend_id = f.friend_id
     }
   }
+  console.log('friend_id', friend_id)
+
+  let target = null
+  if (friend_id)
+    for (const f of friends) {
+      if (f._id === friend_id) {
+        target = f
+        break
+      }
+    }
   React.useEffect(() => {
     if (!friends || friends.length === 0) {
       friendList()
     }
   }, [friends, friendList])
 
+  React.useEffect(() => {
+    if (!imSessions || imSessions.length === 0) {
+      imSessionList()
+    }
+  }, [imSessions, imSessionList])
+
   const onSend = (msg: string) => {
     if (msg && chat) {
       chat.emit('send', {
-        receiver: params.id,
+        session_id,
         message: msg
       })
     }
@@ -85,7 +102,7 @@ const Chat: React.SFC<ChatProps> = ({
             title={target.nickname || target.username || ''}
             showBack={true}
           />
-          <ChatMessageList />
+          <ChatMessageList session_id={session_id} target={target} />
           <InputBar onSend={onSend} />
         </Container>
       </Slide>
@@ -94,12 +111,14 @@ const Chat: React.SFC<ChatProps> = ({
 }
 
 const mapStateToProps = (state: AppState) => ({
-  friends: state.users.friends
+  friends: state.users.friends,
+  imSessions: state.users.imSessions
 })
 
 const mapDispatchToProps = {
   friendList: friendListAction,
-  chatBoxAddMessage: chatBoxAddMessageAction
+  chatBoxAddMessage: chatBoxAddMessageAction,
+  imSessionList: imSessionListAction
 }
 export default {
   view: connect(mapStateToProps, mapDispatchToProps)(Chat)

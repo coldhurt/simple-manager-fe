@@ -164,10 +164,10 @@ export const friendAddSuccessAction = (friends: IAdmin[]) => {
   }
 }
 
-export const chatBoxListAction = (friend_id: string) => {
+export const chatBoxListAction = (session_id: string) => {
   return {
     type: CHAT_BOX_LIST,
-    friend_id
+    session_id
   }
 }
 
@@ -178,9 +178,13 @@ export const chatBoxListFailedAction = (error: string) => {
   }
 }
 
-export const chatBoxListSuccessAction = (data: IMessage[]) => {
+export const chatBoxListSuccessAction = (
+  session_id: string,
+  data: IMessage[]
+) => {
   return {
     type: CHAT_BOX_LIST_SUCCESS,
+    session_id,
     data
   }
 }
