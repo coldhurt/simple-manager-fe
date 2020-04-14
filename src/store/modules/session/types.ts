@@ -10,6 +10,7 @@ export const SESSION_DELETE_SUCCESS = 'IM_SESSION_DELETE_SUCCESS'
 export const CHAT_BOX_LIST = 'CHAT_BOX_LIST'
 export const CHAT_BOX_LIST_FAILED = 'CHAT_BOX_LIST_FAILED'
 export const CHAT_BOX_LIST_SUCCESS = 'CHAT_BOX_LIST_SUCCESS'
+export const CHAT_BOX_ADD_MESSAGE = 'CHAT_BOX_ADD_MESSAGE'
 
 export interface IMessage {
   message: string
@@ -28,6 +29,10 @@ export interface ISession {
   type: number // 1: 个人  2: 群组
 }
 
+export interface IAddSession {
+  friend_id: string
+}
+
 export interface ISessionState {
   listLoading: boolean
   listError: string
@@ -37,6 +42,9 @@ export interface ISessionState {
   deleteError: string
   sessions: Record<string, ISession | null>
   session_ids: string[]
+  chatboxMessage: Record<string, IMessage[]>
+  chatboxLoading: boolean
+  chatboxError: string
 }
 
 export interface ISessionListAction {
@@ -86,6 +94,28 @@ export interface ISessionDeleteFailedAction {
   error: string
 }
 
+export interface IChatBoxListAction {
+  type: typeof CHAT_BOX_LIST
+  session_id: string
+}
+
+export interface IChatBoxListSuccessAction {
+  type: typeof CHAT_BOX_LIST_SUCCESS
+  session_id: string
+  data: IMessage[]
+}
+
+export interface IChatBoxListFailedAction {
+  type: typeof CHAT_BOX_LIST_FAILED
+  error: string
+}
+
+export interface IChatBoxAddMessageAction {
+  type: typeof CHAT_BOX_ADD_MESSAGE
+  session_id: string
+  data: IMessage
+}
+
 export type ISessionAction =
   | ISessionAddAction
   | ISessionAddFailedAction
@@ -96,3 +126,7 @@ export type ISessionAction =
   | ISessionDeleteAction
   | ISessionDeleteSuccessAction
   | ISessionDeleteFailedAction
+  | IChatBoxListAction
+  | IChatBoxListFailedAction
+  | IChatBoxListSuccessAction
+  | IChatBoxAddMessageAction

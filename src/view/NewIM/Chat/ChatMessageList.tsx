@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { makeStyles, Grid } from '@material-ui/core'
-import { IMessage, IAdmin } from '../../../store/user/types'
-import { AppState } from '../../../store'
-import { connect } from 'react-redux'
+import { getChatBoxMessages, getUserInfo } from '../../../store/modules'
+import { useSelector, useDispatch } from 'react-redux'
 import { Avatar } from 'antd'
-import { useParams } from 'react-router-dom'
-import { userInfoAction, chatBoxListAction } from '../../../store/user/actions'
 import { debounce } from 'lodash'
+import { IUserInfo } from '../../../store/modules/auth/types'
+import { IMessage } from '../../../store/modules/session/types'
+import { chatBoxListAction } from '../../../store/modules/session'
+import { userInfoAction } from '../../../store/modules/auth'
 
 export const scrollToBottom = debounce(() => {
   setTimeout(() => {
@@ -15,14 +16,14 @@ export const scrollToBottom = debounce(() => {
       dom.scrollTo({
         left: 0,
         top: dom.scrollHeight,
-        behavior: 'smooth'
+        behavior: 'smooth',
       })
   }, 200)
 }, 300)
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   content: {
     position: 'fixed',
@@ -33,24 +34,24 @@ const useStyles = makeStyles({
     overflowY: 'scroll',
     padding: 10,
     backgroundImage: 'url("/images/chatbox1.jpg")',
-    backgroundSize: 'cover'
+    backgroundSize: 'cover',
   },
   item: {
     alignItems: 'center',
-    height: '10vh'
-  }
+    height: '10vh',
+  },
 })
 
 interface ChatMessageItemProps {
   message: IMessage
   targetAvatar: string
-  userInfo: IAdmin | null
+  userInfo: IUserInfo | null
 }
 
 const ChatMessageItem: React.SFC<ChatMessageItemProps> = ({
   message,
   targetAvatar,
-  userInfo
+  userInfo,
 }) => {
   const classes = useStyles()
   return !message.send ? (
@@ -75,36 +76,30 @@ const ChatMessageItem: React.SFC<ChatMessageItemProps> = ({
 
 interface ChatMessageListProps {
   session_id: string
-  target: IAdmin
-  chatboxMessage: Record<string, IMessage[]>
-  userInfo: IAdmin | null
-  getUserInfo(): void
-  chatBoxList(friend_id: string): void
+  target: IUserInfo
 }
 
 const ChatMessageList: React.SFC<ChatMessageListProps> = ({
   session_id,
   target,
-  chatboxMessage,
-  userInfo,
-  getUserInfo,
-  chatBoxList
 }) => {
   const classes = useStyles()
   const targetAvatar = target ? target.avatar || '' : ''
-
+  const dispatch = useDispatch()
+  const userInfo = useSelector(getUserInfo)
   React.useEffect(() => {
     if (session_id) {
-      console.log(chatBoxList(session_id))
+      console.log(dispatch(chatBoxListAction(session_id)))
       scrollToBottom()
     }
-  }, [session_id, chatBoxList])
+  }, [session_id, dispatch])
   React.useEffect(() => {
     if (!userInfo) {
-      getUserInfo()
+      dispatch(userInfoAction())
     }
   }, [])
-  const messages = chatboxMessage[session_id] || []
+  const chatBoxMessages = useSelector(getChatBoxMessages)
+  const messages = chatBoxMessages[session_id] || []
   console.log('session_id', session_id)
   console.log('messsages', messages)
   return (
@@ -114,7 +109,7 @@ const ChatMessageList: React.SFC<ChatMessageListProps> = ({
       id='chat-box-message'
       spacing={2}
     >
-      {messages.map(item => (
+      {messages.map((item) => (
         <ChatMessageItem
           key={item._id}
           message={item}
@@ -126,14 +121,4 @@ const ChatMessageList: React.SFC<ChatMessageListProps> = ({
   )
 }
 
-const mapStateToProps = (state: AppState) => ({
-  chatboxMessage: state.users.chatboxMessage,
-  userInfo: state.users.userInfo
-})
-
-const mapDispatchToProps = {
-  getUserInfo: userInfoAction,
-  chatBoxList: chatBoxListAction
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChatMessageList)
+export default ChatMessageList

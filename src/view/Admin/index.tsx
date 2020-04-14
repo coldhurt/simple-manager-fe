@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 function AdminPage() {
-  return <div></div>
+  return <div>Admin page</div>
 }
 
 export default AdminPage

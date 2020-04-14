@@ -1,48 +1,57 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
+import { Post } from '../../utils'
+import { message } from 'antd'
 import {
   ILoginAction,
-  USER_LOGIN,
-  IUserListAction,
-  USER_LIST,
-  FRIEND_LIST,
-  IFriendListAction,
-  FRIEND_ADD,
-  IFriendAddAction,
-  USER_INFO,
-  CHAT_BOX_LIST,
-  IChatBoxListAction,
-  UPDATE_USER_INFO,
   IUpdateUserInfoAction,
-  IIMSessionListAction,
-  IM_SESSION_LIST,
-  IIMSessionAddAction,
-  IM_SESSION_ADD,
   IRegisterAction,
+  USER_LOGIN,
+  USER_INFO,
+  UPDATE_USER_INFO,
   USER_REGISTER,
-} from '../user/types'
+} from '../modules/auth/types'
 import {
   loginSuccessAction,
   loginFailedAction,
+  userInfoSuccessAction,
+  userInfoFailedAction,
+  updateUserInfoSuccessAction,
+  updateUserInfoFailedAction,
+  registerSuccessAction,
+  registerFailedAction,
+} from '../modules/auth'
+import {
+  IUserListAction,
+  IFriendListAction,
+  IFriendAddAction,
+  USER_LIST,
+  FRIEND_LIST,
+  FRIEND_ADD,
+} from '../modules/friend/types'
+import {
   userListSuccessAction,
   userListFailedAction,
   friendListSuccessAction,
   friendListFailedAction,
   friendAddSuccessAction,
   friendAddFailedAction,
-  userInfoSuccessAction,
+} from '../modules/friend'
+import {
+  IChatBoxListAction,
+  ISessionListAction,
+  ISessionAddAction,
+  CHAT_BOX_LIST,
+  SESSION_ADD,
+  SESSION_LIST,
+} from '../modules/session/types'
+import {
   chatBoxListSuccessAction,
   chatBoxListFailedAction,
-  updateUserInfoSuccessAction,
-  updateUserInfoFailedAction,
-  imSessionListSuccessAction,
-  imSessionListFailedAction,
-  imSessionAddSuccessAction,
-  imSessionAddFailedAction,
-  registerSuccessAction,
-  registerFailedAction,
-} from '../user/actions'
-import { Post } from '../../utils'
-import { message } from 'antd'
+  sessionListSuccessAction,
+  sessionListFailedAction,
+  sessionAddSuccessAction,
+  sessionAddFailedAction,
+} from '../modules/session'
 
 function myFetch(url: string, body?: Object) {
   return Post(url, body)
@@ -50,7 +59,7 @@ function myFetch(url: string, body?: Object) {
 
 function* login(action: ILoginAction) {
   try {
-    const json = yield call(myFetch, `/api/admin/login`, action.admin)
+    const json = yield call(myFetch, `/api/admin/login`, action.data)
     if (json.success) {
       yield put(loginSuccessAction(json.data))
       const location = window.location
@@ -110,7 +119,7 @@ function* fetchUserInfo() {
     const json = yield call(myFetch, '/api/admin/detail')
     yield put(userInfoSuccessAction(json.data))
   } catch (e) {
-    yield put(friendAddFailedAction(e.message))
+    yield put(userInfoFailedAction(e.message))
   }
 }
 
@@ -135,21 +144,21 @@ function* updateUserInfo(action: IUpdateUserInfoAction) {
   }
 }
 
-function* fetchSessionList(action: IIMSessionListAction) {
+function* fetchSessionList(action: ISessionListAction) {
   try {
     const json = yield call(myFetch, '/api/session/list')
-    yield put(imSessionListSuccessAction(json.data))
+    yield put(sessionListSuccessAction(json.data))
   } catch (e) {
-    yield put(imSessionListFailedAction(e.message))
+    yield put(sessionListFailedAction(e.message))
   }
 }
 
-function* addSession(action: IIMSessionAddAction) {
+function* addSession(action: ISessionAddAction) {
   try {
     const json = yield call(myFetch, '/api/session/add', action.data)
-    yield put(imSessionAddSuccessAction(json.data))
+    yield put(sessionAddSuccessAction(json.data))
   } catch (e) {
-    yield put(imSessionAddFailedAction(e.message))
+    yield put(sessionAddFailedAction(e.message))
   }
 }
 
@@ -171,8 +180,8 @@ function* rootSaga() {
   yield takeLatest(USER_INFO, fetchUserInfo)
   yield takeLatest(CHAT_BOX_LIST, fetchChatBoxMessage)
   yield takeLatest(UPDATE_USER_INFO, updateUserInfo)
-  yield takeLatest(IM_SESSION_LIST, fetchSessionList)
-  yield takeLatest(IM_SESSION_ADD, addSession)
+  yield takeLatest(SESSION_LIST, fetchSessionList)
+  yield takeLatest(SESSION_ADD, addSession)
   yield takeLatest(USER_REGISTER, register)
 }
 

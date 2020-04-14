@@ -3,9 +3,12 @@ import Router from './route'
 import './App.css'
 import Message, { MessageProps } from './components/Message'
 import { connect } from 'react-redux'
-import { IUtilState } from './store/util/types'
-import { showMessageAction, hideMessageAction } from './store/util/actions'
-import { AppState } from './store'
+import { IUtilState } from './store/modules/util/types'
+import {
+  showMessageAction,
+  hideMessageAction,
+} from './store/modules/util/actions'
+import { AppState } from './store/modules'
 import { Container, CssBaseline, makeStyles } from '@material-ui/core'
 
 export type MessageActionProps = {
@@ -22,8 +25,8 @@ const useStyles = makeStyles({
     display: 'flex',
     // alignContent: 'center',
     // justifyContent: 'center',
-    flexDirection: 'column'
-  }
+    flexDirection: 'column',
+  },
 })
 
 const App: React.SFC<MessageActionProps> = ({ util, hideMessageAction }) => {
@@ -41,12 +44,12 @@ const App: React.SFC<MessageActionProps> = ({ util, hideMessageAction }) => {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  util: state.util
+  util: state.util,
 })
 
 const mapDispatchToProps = {
   showMessageAction,
-  hideMessageAction
+  hideMessageAction,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

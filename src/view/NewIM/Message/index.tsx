@@ -1,11 +1,6 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
-import { AppState } from '../../../store'
-import {
-  imSessionListAction,
-  friendListAction
-} from '../../../store/user/actions'
-import { IAdmin, IMSession } from '../../../store/user/types'
+import { useDispatch, useSelector } from 'react-redux'
+import { getSession, getFriend } from '../../../store/modules'
 import {
   Avatar,
   makeStyles,
@@ -14,39 +9,35 @@ import {
   ListItemText,
   List,
   CircularProgress,
-  Badge
+  Badge,
 } from '@material-ui/core'
 import {
   Link as RouterLink,
-  LinkProps as RouterLinkProps
+  LinkProps as RouterLinkProps,
 } from 'react-router-dom'
-
-interface MessageProps {
-  loading: boolean
-  imSessions: IMSession[]
-  sessionList(): void
-  friends: IAdmin[]
-  friendList(): void
-}
+import { ISession } from '../../../store/modules/session/types'
+import { sessionListAction } from '../../../store/modules/session'
+import { friendListAction } from '../../../store/modules/friend'
+import { IUserInfo } from '../../../store/modules/auth/types'
 
 const useStyles = makeStyles({
   root: {
-    padding: 10
+    padding: 10,
   },
   avatar: {
     marginRight: '3vw',
     width: '10vw',
-    height: '10vw'
-  }
+    height: '10vw',
+  },
 })
 
 interface SessionItemProps {
-  session: IMSession
-  avatars: Map<string, IAdmin>
+  session: ISession
+  user: IUserInfo | null
 }
 
 const SessionItem: React.SFC<SessionItemProps> = React.memo(
-  ({ session, avatars }) => {
+  ({ session, user }) => {
     const classes = useStyles()
     const { friend_id, lastMessage, _id, unread } = session
     const renderLink = React.useMemo(
@@ -56,7 +47,6 @@ const SessionItem: React.SFC<SessionItemProps> = React.memo(
         )),
       [_id]
     )
-    const user = avatars.get(friend_id)
 
     return (
       <li>
@@ -80,41 +70,30 @@ const SessionItem: React.SFC<SessionItemProps> = React.memo(
   }
 )
 
-const MessageList: React.SFC<MessageProps> = ({
-  loading,
-  imSessions,
-  sessionList,
-  friends,
-  friendList
-}) => {
+const MessageList: React.SFC = () => {
+  const dispatch = useDispatch()
+  const { sessions, session_ids, listLoading } = useSelector(getSession)
+  const { friends, friend_ids } = useSelector(getFriend)
   React.useEffect(() => {
-    sessionList()
-    if (friends.length === 0) friendList()
-  }, [])
+    dispatch(sessionListAction())
+    if (friend_ids.length === 0) dispatch(friendListAction())
+  }, [friend_ids, dispatch])
   const classes = useStyles()
-  const avatars = new Map()
-  for (const f of friends) {
-    if (f && f._id) avatars.set(f._id, f)
-  }
-  return loading ? (
+  return listLoading ? (
     <CircularProgress />
   ) : (
     <List className={classes.root}>
-      {imSessions.map(item => (
-        <SessionItem key={item._id} session={item} avatars={avatars} />
-      ))}
+      {session_ids.map((item) => {
+        const session = sessions[item]
+        return session ? (
+          <SessionItem
+            key={item}
+            session={session}
+            user={friends[session.friend_id]}
+          />
+        ) : null
+      })}
     </List>
   )
 }
-
-const mapStateToProps = (state: AppState) => ({
-  imSessions: state.users.imSessions,
-  friends: state.users.friends,
-  loading: state.users.loading
-})
-
-const mapDispatchToProps = {
-  sessionList: imSessionListAction,
-  friendList: friendListAction
-}
-export default connect(mapStateToProps, mapDispatchToProps)(MessageList)
+export default MessageList

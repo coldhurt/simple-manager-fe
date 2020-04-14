@@ -12,12 +12,12 @@ export interface IFriendState {
   friend_ids: string[]
 }
 
-export const FRIEND_LIST = 'FRIEND_LIST'
-export const FRIEND_LIST_FAILED = 'FRIEND_LIST_FAILED'
-export const FRIEND_LIST_SUCCESS = 'FRIEND_LIST_SUCCESS'
 export const USER_LIST = 'USER_LIST'
 export const USER_LIST_FAILED = 'USER_LIST_FAILED'
 export const USER_LIST_SUCCESS = 'USER_LIST_SUCCESS'
+export const FRIEND_LIST = 'FRIEND_LIST'
+export const FRIEND_LIST_FAILED = 'FRIEND_LIST_FAILED'
+export const FRIEND_LIST_SUCCESS = 'FRIEND_LIST_SUCCESS'
 export const FRIEND_ADD = 'FRIEND_ADD'
 export const FRIEND_ADD_FAILED = 'FRIEND_ADD_FAILED'
 export const FRIEND_ADD_SUCCESS = 'FRIEND_ADD_SUCCESS'
@@ -26,6 +26,9 @@ export const FRIEND_DELETE_FAILED = 'FRIEND_DELETE_FAILED'
 export const FRIEND_DELETE_SUCCESS = 'FRIEND_DELETE_SUCCESS'
 
 export const actionTypes = {
+  USER_LIST,
+  USER_LIST_FAILED,
+  USER_LIST_SUCCESS,
   FRIEND_LIST,
   FRIEND_LIST_FAILED,
   FRIEND_LIST_SUCCESS,
@@ -35,6 +38,25 @@ export const actionTypes = {
   FRIEND_DELETE,
   FRIEND_DELETE_FAILED,
   FRIEND_DELETE_SUCCESS,
+}
+
+export interface IUserListAction {
+  type: typeof USER_LIST
+  nickname: string
+}
+
+export interface IUserListSuccessAction {
+  type: typeof USER_LIST_SUCCESS
+  data: IUserInfo[]
+}
+
+export interface IUserListFailedAction {
+  type: typeof USER_LIST_FAILED
+  error: string
+}
+
+export interface IUserListAction {
+  type: typeof USER_LIST
 }
 
 export interface IFriendListAction {
@@ -82,6 +104,9 @@ export interface IFriendDeleteFailedAction {
 }
 
 export type IFriendAction =
+  | IUserListAction
+  | IUserListFailedAction
+  | IUserListSuccessAction
   | IFriendListAction
   | IFriendListFailedAction
   | IFriendListSuccessAction

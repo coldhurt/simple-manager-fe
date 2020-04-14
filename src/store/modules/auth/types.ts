@@ -28,6 +28,8 @@ export interface IAuthState {
   userInfo: IUserInfo | null
   loading: boolean
   error: string
+  updateError: string
+  updateLoading: boolean
 }
 
 export interface IRegister {

@@ -6,12 +6,12 @@ const useStyles = makeStyles({
     position: 'fixed',
     bottom: 0,
     left: 0,
-    height: 50
+    height: 50,
   },
   input: {
     height: 48,
-    padding: 0
-  }
+    padding: 0,
+  },
 })
 
 interface InputBarProps {
@@ -36,7 +36,7 @@ const InputBar: React.SFC<InputBarProps> = ({ onSend }) => {
         <TextField
           fullWidth
           value={message}
-          onKeyPress={ev => {
+          onKeyPress={(ev) => {
             console.log(`Pressed keyCode ${ev.key}`)
             if (ev.key === 'Enter') {
               // Do code here
@@ -44,7 +44,7 @@ const InputBar: React.SFC<InputBarProps> = ({ onSend }) => {
               onSubmit()
             }
           }}
-          onChange={e => {
+          onChange={(e) => {
             setMessage(e.target.value)
           }}
         />
@@ -58,4 +58,4 @@ const InputBar: React.SFC<InputBarProps> = ({ onSend }) => {
   )
 }
 
-export default InputBar
+export default React.memo(InputBar)

@@ -1,11 +1,6 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
-import { AppState } from '../../../store'
-import {
-  friendListAction,
-  imSessionAddAction
-} from '../../../store/user/actions'
-import { IAdmin, IMSession } from '../../../store/user/types'
+import { useSelector, useDispatch } from 'react-redux'
+import { getFriend, getSession } from '../../../store/modules'
 import {
   Avatar,
   makeStyles,
@@ -13,40 +8,36 @@ import {
   ListItemIcon,
   ListItemText,
   List,
-  Fab
+  Fab,
 } from '@material-ui/core'
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
-  Link
+  Link,
 } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
-
-interface FriendsProps {
-  friends: IAdmin[]
-  imSessions: IMSession[]
-  friendList(): void
-  sessionAdd(session: { friend_id: string }): void
-}
+import { sessionAddAction } from '../../../store/modules/session'
+import { friendListAction } from '../../../store/modules/friend'
+import { IUserInfo } from '../../../store/modules/auth/types'
 
 const useStyles = makeStyles({
   root: {
-    padding: 10
+    padding: 10,
   },
   avatar: {
     marginRight: '3vw',
     width: '10vw',
-    height: '10vw'
+    height: '10vw',
   },
   add: {
     position: 'fixed',
     right: 10,
-    bottom: 70
-  }
+    bottom: 70,
+  },
 })
 
 interface FriendItemProps {
-  friend: IAdmin
+  friend: IUserInfo
   sessionAdd(session: { friend_id: string }): void
 }
 
@@ -77,27 +68,26 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
   )
 }
 
-const Friends: React.SFC<FriendsProps> = ({
-  friends,
-  friendList,
-  sessionAdd,
-  imSessions
-}) => {
+const Friends: React.SFC = () => {
+  const dispatch = useDispatch()
+  const { friends, friend_ids } = useSelector(getFriend)
+  // const {sessions, session_ids} = useSelector(getSession)
   React.useEffect(() => {
-    friendList()
-  }, [friendList])
-  const classes = useStyles()
+    if (friend_ids.length === 0) dispatch(friendListAction())
+  }, [dispatch, friend_ids])
   const onAddSession = (data: { friend_id: string }) => {
-    if (imSessions.filter(i => i.friend_id === data.friend_id).length === 0) {
-      sessionAdd(data)
-    }
+    dispatch(sessionAddAction(data))
   }
+  const classes = useStyles()
   return (
     <div>
       <List className={classes.root}>
-        {friends.map(item => (
-          <FriendItem key={item._id} friend={item} sessionAdd={onAddSession} />
-        ))}
+        {friend_ids.map((item) => {
+          const friend = friends[item]
+          return friend ? (
+            <FriendItem key={item} friend={friend} sessionAdd={onAddSession} />
+          ) : null
+        })}
       </List>
       <Link to='/NewIM/friends/add'>
         <Fab color='primary' aria-label='add' className={classes.add}>
@@ -107,14 +97,4 @@ const Friends: React.SFC<FriendsProps> = ({
     </div>
   )
 }
-
-const mapStateToProps = (state: AppState) => ({
-  friends: state.users.friends,
-  imSessions: state.users.imSessions
-})
-
-const mapDispatchToProps = {
-  friendList: friendListAction,
-  sessionAdd: imSessionAddAction
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Friends)
+export default Friends

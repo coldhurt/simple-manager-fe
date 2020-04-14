@@ -8,39 +8,30 @@ import {
   ListItemText,
   Avatar,
   makeStyles,
-  Button
+  Button,
 } from '@material-ui/core'
 import * as React from 'react'
 import { IAdmin } from '../../../store/user/types'
 import { HeaderBar } from '../../../components'
 import { commonPageStyle } from '../styles'
-import {
-  friendAddAction,
-  userListAction,
-  userInfoAction
-} from '../../../store/user/actions'
-import { AppState } from '../../../store'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Modal } from 'antd'
+import { getUserInfo, getUserList } from '../../../store/modules'
+import { userInfoAction } from '../../../store/modules/auth'
+import { IUserInfo } from '../../../store/modules/auth/types'
+import { friendAddAction, userListAction } from '../../../store/modules/friend'
+import getText from '../../../i18n'
 
 const useStyles = makeStyles({
   root: {
-    padding: 10
+    padding: 10,
   },
   avatar: {
     marginRight: '3vw',
     width: '10vw',
-    height: '10vw'
-  }
+    height: '10vw',
+  },
 })
-
-interface AddFriendProps {
-  userInfo: IAdmin | null
-  users: IAdmin[]
-  friendAdd(friend_id: string): void
-  getUserInfo(): void
-  userList(nickname?: string): void
-}
 
 interface FriendItemProps {
   friend: IAdmin
@@ -60,27 +51,23 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend, friendAdd }) => {
   )
 }
 
-const AddFriend: React.SFC<AddFriendProps> = ({
-  userInfo,
-  users,
-  userList,
-  getUserInfo,
-  friendAdd
-}) => {
+const AddFriend: React.SFC = () => {
+  const userInfo = useSelector(getUserInfo)
+  const dispatch = useDispatch()
+  const users = useSelector(getUserList)
   React.useEffect(() => {
-    if (!userInfo) getUserInfo()
-  }, [userInfo, getUserInfo])
-  const [text, setText] = React.useState(userInfo ? userInfo.nickname : '')
-  React.useEffect(() => {
-    if (!userInfo) getUserInfo()
-  }, [userInfo, getUserInfo])
+    if (!userInfo) dispatch(userInfoAction())
+  }, [userInfo, dispatch])
+  const [text, setText] = React.useState(
+    userInfo ? userInfo.nickname || '' : ''
+  )
   const classes = commonPageStyle()
-  const onAdd = (data: IAdmin) => {
+  const onAdd = (data: IUserInfo) => {
     Modal.confirm({
       title: `确定添加${data.nickname || data.username}为好友吗`,
       onOk: () => {
-        friendAdd(data._id || '')
-      }
+        friendAddAction(data._id)
+      },
     })
   }
   return (
@@ -98,7 +85,7 @@ const AddFriend: React.SFC<AddFriendProps> = ({
               <ListItem>
                 <TextField
                   value={text}
-                  onChange={e => setText(e.target.value)}
+                  onChange={(e) => setText(e.target.value)}
                   fullWidth
                   placeholder='根据昵称搜索'
                 />
@@ -106,12 +93,12 @@ const AddFriend: React.SFC<AddFriendProps> = ({
                   style={{ marginLeft: 10 }}
                   variant='contained'
                   color='primary'
-                  onClick={() => userList(text)}
+                  onClick={() => dispatch(userListAction(text))}
                 >
-                  搜索
+                  {getText('Search')}
                 </Button>
               </ListItem>
-              {users.map(item => (
+              {users.map((item) => (
                 <FriendItem
                   friendAdd={() => onAdd(item)}
                   key={item._id}
@@ -126,17 +113,6 @@ const AddFriend: React.SFC<AddFriendProps> = ({
   )
 }
 
-const mapStateToProps = (state: AppState) => ({
-  userInfo: state.users.userInfo,
-  users: state.users.users
-})
-
-const mapDispatchToProps = {
-  getUserInfo: userInfoAction,
-  friendAdd: friendAddAction,
-  userList: userListAction
-}
-
 export default {
-  view: connect(mapStateToProps, mapDispatchToProps)(AddFriend)
+  view: AddFriend,
 }

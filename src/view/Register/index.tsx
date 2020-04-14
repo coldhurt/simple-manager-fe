@@ -1,26 +1,18 @@
-import React from 'react'
-import { IUserState, IRegister } from '../../store/user/types'
-import { IState } from '../../store/types'
-import { connect } from 'react-redux'
-import { registerAction } from '../../store/user/actions'
-import userReducer from '../../store/user/reducers'
+import React, { useCallback } from 'react'
+import { registerAction } from '../../store/modules/auth'
+// import userReducer from '../../store/user/reducers'
 import {
   Button,
   Container,
   CssBaseline,
   Grid,
   TextField,
-  makeStyles
+  makeStyles,
 } from '@material-ui/core'
-import { MessageActionProps } from '../../App'
-import { showMessageAction } from '../../store/util/actions'
 import { message } from 'antd'
 import { useHistory } from 'react-router-dom'
-
-interface RegisterProps {
-  user: IUserState
-  register(data: IRegister, callback: Function): void
-}
+import getText from '../../i18n'
+import { useDispatch } from 'react-redux'
 
 const useStyles = makeStyles({
   root: {
@@ -30,13 +22,13 @@ const useStyles = makeStyles({
     display: 'flex',
     alignContent: 'center',
     justifyContent: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   form: {
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   item: {
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -45,18 +37,44 @@ const useStyles = makeStyles({
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
     height: 48,
-    padding: '0 30px'
-  }
+    padding: '0 30px',
+  },
 })
 
-const Register: React.SFC<RegisterProps & MessageActionProps> = ({
-  register
-}) => {
+const Register: React.SFC = () => {
   const classes = useStyles()
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
   const [confirmPassword, setConfirmPassword] = React.useState('')
   const history = useHistory()
+  const dispatch = useDispatch()
+  const onRegister = useCallback(() => {
+    if (!(username.length >= 5 && username.length <= 30)) {
+      message.error('username length should be between 5 and 30')
+      return
+    }
+    if (password !== confirmPassword) {
+      message.error('password is not same to confirmPassword')
+    } else if (!(password.length >= 8 && password.length <= 30)) {
+      message.error('password length should be between 8 and 30')
+    } else {
+      dispatch(
+        registerAction(
+          {
+            username,
+            password,
+            confirmPassword,
+          },
+          (res: Record<string, string>) => {
+            if (res && res.success) {
+              history.replace('/login')
+            }
+          }
+        )
+      )
+    }
+  }, [])
+
   return (
     <Container className={classes.root} disableGutters>
       <CssBaseline>
@@ -64,8 +82,8 @@ const Register: React.SFC<RegisterProps & MessageActionProps> = ({
           <Grid item xs={8} className={classes.item} container>
             <TextField
               value={username}
-              onChange={e => setUsername(e.target.value)}
-              label='username'
+              onChange={(e) => setUsername(e.target.value)}
+              label={getText('Password')}
               required
               fullWidth
             />
@@ -73,8 +91,8 @@ const Register: React.SFC<RegisterProps & MessageActionProps> = ({
           <Grid item xs={8} className={classes.item} container>
             <TextField
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              label='password'
+              onChange={(e) => setPassword(e.target.value)}
+              label={getText('Password')}
               type='password'
               required
               fullWidth
@@ -83,39 +101,16 @@ const Register: React.SFC<RegisterProps & MessageActionProps> = ({
           <Grid item xs={8} className={classes.item} container>
             <TextField
               value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
-              label='confirm password'
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              label={getText('Confirm Password')}
               type='password'
               required
               fullWidth
             />
           </Grid>
           <Grid item xs={8} className={classes.item} container>
-            <Button
-              className={classes.button}
-              fullWidth
-              onClick={() => {
-                if (!(username.length >= 5 && username.length <= 30)) {
-                  message.error('username length should be between 5 and 30')
-                  return
-                }
-                if (password !== confirmPassword) {
-                  message.error('password is not same to confirmPassword')
-                } else if (!(password.length >= 8 && password.length <= 30)) {
-                  message.error('password length should be between 8 and 30')
-                } else {
-                  register(
-                    { username, password, confirmPassword },
-                    (res: Record<string, string>) => {
-                      if (res && res.success) {
-                        history.replace('/login')
-                      }
-                    }
-                  )
-                }
-              }}
-            >
-              Register
+            <Button className={classes.button} fullWidth onClick={onRegister}>
+              {getText('Register')}
             </Button>
           </Grid>
         </Grid>
@@ -124,21 +119,8 @@ const Register: React.SFC<RegisterProps & MessageActionProps> = ({
   )
 }
 
-const mapStateToProps = (state: IState) => {
-  return {
-    user: state.user
-  }
-}
-
-const mapDispatchToProps = {
-  register: registerAction,
-  showMessageAction
-}
-
-const RegisterForm = connect(mapStateToProps, mapDispatchToProps)(Register)
-
 export default {
   name: 'user',
-  reducers: userReducer,
-  view: RegisterForm
+  // reducers: userReducer,
+  view: Register,
 }

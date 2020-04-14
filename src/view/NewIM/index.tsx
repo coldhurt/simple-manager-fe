@@ -6,7 +6,7 @@ import {
   makeStyles,
   Container,
   Slide,
-  Badge
+  Badge,
 } from '@material-ui/core'
 import MessageIcon from '@material-ui/icons/Message'
 import GroupIcon from '@material-ui/icons/Group'
@@ -15,8 +15,9 @@ import Friends from './Friends'
 import Message from './Message'
 import User from './User'
 import { useSelector } from 'react-redux'
-import { AppState } from '../../store'
+import { getSession } from '../../store/modules'
 import getSocket from './socket'
+import getText from '../../i18n'
 
 const useStyles = makeStyles({
   content: {
@@ -24,13 +25,13 @@ const useStyles = makeStyles({
     bottom: 56,
     width: '100vw',
     top: 0,
-    background: '#fff'
+    background: '#fff',
   },
   bottom: {
     position: 'fixed',
     bottom: 0,
-    width: '100vw'
-  }
+    width: '100vw',
+  },
 })
 
 const Main: React.SFC<{ tab: string }> = ({ tab }) => {
@@ -74,7 +75,7 @@ const Main: React.SFC<{ tab: string }> = ({ tab }) => {
 const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
   match,
   location,
-  history
+  history,
 }) => {
   const chat = getSocket()
   console.log(match.params, location, history)
@@ -84,11 +85,15 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
     history.push('/NewIM/message')
   }
 
-  const sessions = useSelector((state: AppState) => state.users.imSessions)
-  let unread = 0
-  for (const sess of sessions) {
-    unread += sess.unread
-  }
+  const { sessions } = useSelector(getSession)
+  const unread = React.useMemo(() => {
+    const values = Object.values(sessions)
+    let unread = 0
+    for (const item of values) {
+      if (item) unread += item.unread
+    }
+    return unread
+  }, [sessions])
 
   const classes = useStyles()
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
@@ -105,7 +110,7 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
       >
         <BottomNavigationAction
           value='message'
-          label='Message'
+          label={getText('Message')}
           icon={
             <Badge badgeContent={unread} color='secondary'>
               <MessageIcon />
@@ -114,12 +119,12 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
         />
         <BottomNavigationAction
           value='friends'
-          label='Friends'
+          label={getText('Friends')}
           icon={<GroupIcon />}
         />
         <BottomNavigationAction
           value='user'
-          label='User'
+          label={getText('MyInfo')}
           icon={<PersonIcon />}
         />
       </BottomNavigation>
@@ -128,5 +133,5 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
 }
 
 export default {
-  view: NewIM
+  view: NewIM,
 }

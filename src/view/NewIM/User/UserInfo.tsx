@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
 import {
   Container,
   Slide,
@@ -9,36 +8,33 @@ import {
   ListItemAvatar,
   Avatar,
   makeStyles,
-  Button
+  Button,
 } from '@material-ui/core'
-import { AppState } from '../../../store'
-import { userInfoAction } from '../../../store/user/actions'
-import { IAdmin } from '../../../store/user/types'
 import { HeaderBar } from '../../../components'
 import { commonPageStyle } from '../styles'
 import ArrowForward from '@material-ui/icons/ArrowForward'
 import {
   Link as RouterLink,
-  LinkProps as RouterLinkProps
+  LinkProps as RouterLinkProps,
 } from 'react-router-dom'
 import { message } from 'antd'
-
-interface UserInfoProps {
-  userInfo: IAdmin | null
-  getUserInfo(): void
-}
+import { getUserInfo } from '../../../store/modules'
+import { useDispatch, useSelector } from 'react-redux'
+import { userInfoAction } from '../../../store/modules/auth'
 
 export const useStyles = makeStyles({
   itemRight: {
     textAlign: 'right',
-    paddingRight: 10
-  }
+    paddingRight: 10,
+  },
 })
 
-const UserInfo: React.SFC<UserInfoProps> = ({ userInfo, getUserInfo }) => {
+const UserInfo: React.SFC = () => {
+  const userInfo = useSelector(getUserInfo)
+  const dispatch = useDispatch()
   React.useEffect(() => {
-    if (!userInfo) getUserInfo()
-  }, [userInfo, getUserInfo])
+    if (!userInfo) dispatch(userInfoAction())
+  }, [userInfo, dispatch])
   const classes = commonPageStyle()
   const cls = useStyles()
   const [show, setShow] = React.useState(true)
@@ -69,16 +65,16 @@ const UserInfo: React.SFC<UserInfoProps> = ({ userInfo, getUserInfo }) => {
 
       fetch('/api/admin/setAvatar', {
         method: 'POST',
-        body: formData
+        body: formData,
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           if (data && data.success) {
-            getUserInfo()
+            dispatch(userInfoAction())
           }
           console.log(data)
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error)
         })
     }
@@ -130,14 +126,6 @@ const UserInfo: React.SFC<UserInfoProps> = ({ userInfo, getUserInfo }) => {
   )
 }
 
-const mapStateToProps = (state: AppState) => ({
-  userInfo: state.users.userInfo
-})
-
-const mapDispatchToProps = {
-  getUserInfo: userInfoAction
-}
-
 export default {
-  view: connect(mapStateToProps, mapDispatchToProps)(UserInfo)
+  view: UserInfo,
 }

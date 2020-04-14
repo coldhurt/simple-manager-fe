@@ -19,6 +19,12 @@ import {
   IFriendDeleteAction,
   IFriendDeleteFailedAction,
   IFriendDeleteSuccessAction,
+  IUserListAction,
+  IUserListSuccessAction,
+  IUserListFailedAction,
+  USER_LIST,
+  USER_LIST_FAILED,
+  USER_LIST_SUCCESS,
 } from './types'
 import { IUserInfo } from '../auth/types'
 import { getIdsAndMapData } from '../../../utils'
@@ -32,55 +38,78 @@ const DEFAULT_FRIEND_STATE: IFriendState = {
   deleteError: '',
   friends: {},
   friend_ids: [],
+  users: [],
 }
 
-export const actions = {
-  // friend action creators
-  friendListAction: (): IFriendListAction => ({
-    type: FRIEND_LIST,
-  }),
+// friend action creators
+export const userListAction = (nickname: string): IUserListAction => ({
+  type: USER_LIST,
+  nickname,
+})
+export const userListSuccessAction = (
+  data: IUserInfo[]
+): IUserListSuccessAction => ({
+  type: USER_LIST_SUCCESS,
+  data,
+})
+export const userListFailedAction = (error: string): IUserListFailedAction => ({
+  type: USER_LIST_FAILED,
+  error,
+})
+export const friendListAction = (): IFriendListAction => ({
+  type: FRIEND_LIST,
+})
 
-  friendListFailedAction: (error: string): IFriendListFailedAction => ({
-    type: FRIEND_LIST_FAILED,
-    error,
-  }),
+export const friendListFailedAction = (
+  error: string
+): IFriendListFailedAction => ({
+  type: FRIEND_LIST_FAILED,
+  error,
+})
 
-  friendListSuccessAction: (data: IUserInfo[]): IFriendListSuccessAction => ({
-    type: FRIEND_LIST_SUCCESS,
-    data,
-  }),
+export const friendListSuccessAction = (
+  data: IUserInfo[]
+): IFriendListSuccessAction => ({
+  type: FRIEND_LIST_SUCCESS,
+  data,
+})
 
-  friendAddAction: (friend_id: string): IFriendAddAction => ({
-    type: FRIEND_ADD,
-    friend_id,
-  }),
+export const friendAddAction = (friend_id: string): IFriendAddAction => ({
+  type: FRIEND_ADD,
+  friend_id,
+})
 
-  friendAddFailedAction: (error: string): IFriendAddFailedAction => ({
-    type: FRIEND_ADD_FAILED,
-    error,
-  }),
+export const friendAddFailedAction = (
+  error: string
+): IFriendAddFailedAction => ({
+  type: FRIEND_ADD_FAILED,
+  error,
+})
 
-  friendAddSuccessAction: (data: IUserInfo): IFriendAddSuccessAction => ({
-    type: FRIEND_ADD_SUCCESS,
-    data,
-  }),
-  friendDeleteAction: (friend_id: string): IFriendDeleteAction => ({
-    type: FRIEND_DELETE,
-    friend_id,
-  }),
+export const friendAddSuccessAction = (
+  data: IUserInfo
+): IFriendAddSuccessAction => ({
+  type: FRIEND_ADD_SUCCESS,
+  data,
+})
+export const friendDeleteAction = (friend_id: string): IFriendDeleteAction => ({
+  type: FRIEND_DELETE,
+  friend_id,
+})
 
-  friendDeleteFailedAction: (error: string): IFriendDeleteFailedAction => ({
-    type: FRIEND_DELETE_FAILED,
-    error,
-  }),
+export const friendDeleteFailedAction = (
+  error: string
+): IFriendDeleteFailedAction => ({
+  type: FRIEND_DELETE_FAILED,
+  error,
+})
 
-  friendDeleteSuccessAction: (
-    friend_id: string
-  ): IFriendDeleteSuccessAction => ({
-    type: FRIEND_DELETE_SUCCESS,
-    friend_id,
-  }),
-}
+export const friendDeleteSuccessAction = (
+  friend_id: string
+): IFriendDeleteSuccessAction => ({
+  type: FRIEND_DELETE_SUCCESS,
+  friend_id,
+})
 
 export default function friendReducer(
   state: IFriendState = DEFAULT_FRIEND_STATE,
@@ -124,7 +153,7 @@ export default function friendReducer(
         addLoading: false,
         friends: {
           ...state.friends,
-          [action.data._id]: action.data,
+          [friend_id]: action.data,
         },
         friend_ids: [friend_id, ...state.friend_ids],
       }

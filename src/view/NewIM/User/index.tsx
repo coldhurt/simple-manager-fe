@@ -1,8 +1,5 @@
 import * as React from 'react'
-import { AppState } from '../../../store'
-import { userInfoAction } from '../../../store/user/actions'
-import { connect } from 'react-redux'
-import { IUserState } from '../../../store/user/types'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   List,
   ListItem,
@@ -10,41 +7,39 @@ import {
   ListItemText,
   Avatar,
   makeStyles,
-  Container
+  Container,
 } from '@material-ui/core'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import {
   Link as RouterLink,
-  LinkProps as RouterLinkProps
+  LinkProps as RouterLinkProps,
 } from 'react-router-dom'
-
-interface UserProps {
-  users: IUserState
-  getUserInfo(): void
-}
+import { getAuth } from '../../../store/modules'
+import { userInfoAction } from '../../../store/modules/auth'
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   user: {
     background: '#eee',
     marginTop: 10,
     padding: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   username: {
-    fontSize: '1.5em'
-  }
+    fontSize: '1.5em',
+  },
 })
 
-const User: React.SFC<UserProps> = ({ users, getUserInfo }) => {
-  const { userInfo } = users
+const User: React.SFC = () => {
+  const userInfo = useSelector(getAuth).userInfo
+  const dispatch = useDispatch()
   React.useEffect(() => {
     if (!userInfo) {
-      getUserInfo()
+      dispatch(userInfoAction())
     }
-  }, [userInfo, getUserInfo])
+  }, [userInfo, dispatch])
   const classes = useStyles()
   const renderLink = React.useMemo(
     () =>
@@ -73,12 +68,4 @@ const User: React.SFC<UserProps> = ({ users, getUserInfo }) => {
   ) : null
 }
 
-const mapStateToProps = (state: AppState) => ({
-  users: state.users
-})
-
-const mapDispatchToProps = {
-  getUserInfo: userInfoAction
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(User)
+export default User

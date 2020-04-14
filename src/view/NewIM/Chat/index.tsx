@@ -1,21 +1,22 @@
 import { makeStyles, Container, Slide } from '@material-ui/core'
 import * as React from 'react'
 import { IMessage, IAdmin, IMSession } from '../../../store/user/types'
-import { AppState } from '../../../store'
-import { connect } from 'react-redux'
+import { AppState, getSession, getFriend } from '../../../store/modules'
+import { connect, useSelector, useDispatch } from 'react-redux'
 import {
   friendListAction,
-  imSessionListAction
+  imSessionListAction,
 } from '../../../store/user/actions'
 import { HeaderBar } from '../../../components'
 import { useParams } from 'react-router-dom'
 import InputBar from './InputBar'
 import getSocket from '../socket/index'
 import ChatMessageList, { scrollToBottom } from './ChatMessageList'
+import { sessionListAction } from '../../../store/modules/session'
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   content: {
     position: 'fixed',
@@ -26,8 +27,8 @@ const useStyles = makeStyles({
     overflowY: 'scroll',
     padding: 10,
     backgroundImage: 'url("/images/chatbox1.jpg")',
-    backgroundSize: 'cover'
-  }
+    backgroundSize: 'cover',
+  },
 })
 
 interface ChatProps {
@@ -38,52 +39,36 @@ interface ChatProps {
   chatBoxAddMessage(message: IMessage): void
 }
 
-const Chat: React.SFC<ChatProps> = ({
-  friends,
-  imSessions,
-  friendList,
-  imSessionList
-}) => {
+const Chat: React.SFC = () => {
   const chat = getSocket()
-
   const classes = useStyles()
-
+  const dispatch = useDispatch()
   const params = useParams<{ id: string }>()
   const session_id = params.id
-
-  let friend_id = null
-  for (const f of imSessions) {
-    if (f._id === session_id) {
-      friend_id = f.friend_id
+  const { friends, friend_ids } = useSelector(getFriend)
+  const { sessions, session_ids } = useSelector(getSession)
+  React.useEffect(() => {
+    if (friend_ids.length === 0) {
+      dispatch(friendListAction())
     }
-  }
+  }, [friend_ids, dispatch])
+  React.useEffect(() => {
+    if (session_ids.length === 0) {
+      dispatch(sessionListAction())
+    }
+  }, [session_ids, dispatch])
+
+  const targetSession = sessions[session_id]
+  let friend_id = targetSession ? targetSession.friend_id : null
   console.log('friend_id', friend_id)
-
   let target = null
-  if (friend_id)
-    for (const f of friends) {
-      if (f._id === friend_id) {
-        target = f
-        break
-      }
-    }
-  React.useEffect(() => {
-    if (!friends || friends.length === 0) {
-      friendList()
-    }
-  }, [friends, friendList])
-
-  React.useEffect(() => {
-    if (!imSessions || imSessions.length === 0) {
-      imSessionList()
-    }
-  }, [imSessions, imSessionList])
+  if (friend_id) target = friends[friend_id]
 
   const onSend = (msg: string) => {
     if (msg && chat) {
       chat.emit('send', {
         session_id,
-        message: msg
+        message: msg,
       })
     }
   }
@@ -108,15 +93,6 @@ const Chat: React.SFC<ChatProps> = ({
   )
 }
 
-const mapStateToProps = (state: AppState) => ({
-  friends: state.users.friends,
-  imSessions: state.users.imSessions
-})
-
-const mapDispatchToProps = {
-  friendList: friendListAction,
-  imSessionList: imSessionListAction
-}
 export default {
-  view: connect(mapStateToProps, mapDispatchToProps)(Chat)
+  view: Chat,
 }

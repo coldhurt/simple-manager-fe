@@ -15,6 +15,8 @@ import {
   CHAT_BOX_LIST_SUCCESS,
   IMessage,
   ISession,
+  IAddSession,
+  CHAT_BOX_ADD_MESSAGE,
 } from './types'
 
 const DEFAULT_SESSION_STATE: ISessionState = {
@@ -26,87 +28,91 @@ const DEFAULT_SESSION_STATE: ISessionState = {
   deleteError: '',
   sessions: {},
   session_ids: [],
+  chatboxMessage: {},
+  chatboxError: '',
+  chatboxLoading: false,
 }
 
-export const actions = {
-  sessionListAction: () => {
-    return {
-      type: SESSION_LIST,
-    }
-  },
+export const sessionListAction = () => {
+  return {
+    type: SESSION_LIST,
+  }
+}
 
-  sessionListFailedAction: (error: string) => {
-    return {
-      type: SESSION_LIST_FAILED,
-      error,
-    }
-  },
-  sessionListSuccessAction: (data: ISession[]) => {
-    return {
-      type: SESSION_LIST_SUCCESS,
-      data,
-    }
-  },
-  sessionAddAction: (data: ISession) => {
-    return {
-      type: SESSION_ADD,
-      data,
-    }
-  },
+export const sessionListFailedAction = (error: string) => {
+  return {
+    type: SESSION_LIST_FAILED,
+    error,
+  }
+}
+export const sessionListSuccessAction = (data: ISession[]) => {
+  return {
+    type: SESSION_LIST_SUCCESS,
+    data,
+  }
+}
+export const sessionAddAction = (data: IAddSession) => {
+  return {
+    type: SESSION_ADD,
+    data,
+  }
+}
 
-  sessionAddFailedAction: (error: string) => {
-    return {
-      type: SESSION_ADD_FAILED,
-      error,
-    }
-  },
+export const sessionAddFailedAction = (error: string) => {
+  return {
+    type: SESSION_ADD_FAILED,
+    error,
+  }
+}
 
-  sessionAddSuccessAction: (data: ISession[]) => {
-    return {
-      type: SESSION_ADD_SUCCESS,
-      data,
-    }
-  },
-  sessionDeleteAction: (session_id: string) => {
-    return {
-      type: SESSION_DELETE,
-      session_id,
-    }
-  },
+export const sessionAddSuccessAction = (data: ISession[]) => {
+  return {
+    type: SESSION_ADD_SUCCESS,
+    data,
+  }
+}
+export const sessionDeleteAction = (session_id: string) => {
+  return {
+    type: SESSION_DELETE,
+    session_id,
+  }
+}
 
-  sessionDeleteFailedAction: (error: string) => {
-    return {
-      type: SESSION_DELETE_FAILED,
-      error,
-    }
-  },
+export const sessionDeleteFailedAction = (error: string) => {
+  return {
+    type: SESSION_DELETE_FAILED,
+    error,
+  }
+}
 
-  sessionDeleteSuccessAction: (session_id: string) => {
-    return {
-      type: SESSION_DELETE_SUCCESS,
-      session_id,
-    }
-  },
-  chatBoxListAction: (session_id: string) => {
-    return {
-      type: CHAT_BOX_LIST,
-      session_id,
-    }
-  },
-  chatBoxListFailedAction: (error: string) => {
-    return {
-      type: CHAT_BOX_LIST_FAILED,
-      error,
-    }
-  },
+export const sessionDeleteSuccessAction = (session_id: string) => {
+  return {
+    type: SESSION_DELETE_SUCCESS,
+    session_id,
+  }
+}
+export const chatBoxListAction = (session_id: string) => {
+  return {
+    type: CHAT_BOX_LIST,
+    session_id,
+  }
+}
+export const chatBoxListFailedAction = (error: string) => {
+  return {
+    type: CHAT_BOX_LIST_FAILED,
+    error,
+  }
+}
 
-  chatBoxListSuccessAction: (session_id: string, data: IMessage[]) => {
-    return {
-      type: CHAT_BOX_LIST_SUCCESS,
-      session_id,
-      data,
-    }
-  },
+export const chatBoxListSuccessAction = (
+  session_id: string,
+  data: IMessage[]
+) => {
+  return {
+    type: CHAT_BOX_LIST_SUCCESS,
+    session_id,
+    data,
+  }
 }
 
 export default function sessionReducer(
@@ -185,6 +191,43 @@ export default function sessionReducer(
         deleteLoading: false,
         deleteError: action.error,
       }
+    case CHAT_BOX_LIST:
+      return {
+        ...state,
+        chatboxLoading: true,
+      }
+    case CHAT_BOX_LIST_FAILED:
+      return {
+        ...state,
+        chatboxLoading: false,
+        chatboxError: action.error,
+      }
+    case CHAT_BOX_LIST_SUCCESS:
+      return {
+        ...state,
+        chatboxLoading: false,
+        chatboxMessage: {
+          ...state.chatboxMessage,
+          [action.session_id]: action.data,
+        },
+      }
+    case CHAT_BOX_ADD_MESSAGE: {
+      const data = action.data
+      if (data) {
+        const { session_id } = data
+        const chatboxMessage = { ...state.chatboxMessage }
+        if (!chatboxMessage[session_id]) {
+          chatboxMessage[session_id] = [data]
+        } else {
+          chatboxMessage[session_id] = [...chatboxMessage[session_id], data]
+        }
+        return {
+          ...state,
+          chatboxMessage,
+        }
+      }
+      return state
+    }
     default:
       return state
   }

@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginAction } from '../../store/user/actions'
 import userReducer from '../../store/user/reducers'
 import {
   Button,
@@ -9,9 +8,11 @@ import {
   Grid,
   TextField,
   makeStyles,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core'
-import { AppState } from '../../store'
+import { getAuth } from '../../store/modules'
+import { loginAction } from '../../store/modules/auth'
+import getText from '../../i18n'
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -20,13 +21,13 @@ const useStyles = makeStyles({
     display: 'flex',
     alignContent: 'center',
     justifyContent: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   form: {
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   item: {
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   button: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
@@ -35,18 +36,23 @@ const useStyles = makeStyles({
     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
     color: 'white',
     height: 48,
-    padding: '0 30px'
-  }
+    padding: '0 30px',
+  },
 })
 
 const Login = () => {
   const classes = useStyles()
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
-  const loading = useSelector((state: AppState) => state.users.loading)
+  const loading = useSelector(getAuth).loading
   console.log('render Login')
   const dispatch = useDispatch()
-  const login = useCallback(data => dispatch(loginAction(data)), [dispatch])
+  const login = useCallback(
+    () => dispatch(loginAction({ username, password })),
+    [dispatch]
+  )
+  const onChangeUsername = useCallback((e) => setUsername(e.target.value), [])
+  const onChangePassword = useCallback((e) => setPassword(e.target.value), [])
   return (
     <Container className={classes.root} disableGutters>
       <CssBaseline>
@@ -55,8 +61,8 @@ const Login = () => {
             <TextField
               autoFocus
               value={username}
-              onChange={e => setUsername(e.target.value)}
-              label='username'
+              onChange={onChangeUsername}
+              label={getText('Username')}
               required
               fullWidth
             />
@@ -64,22 +70,16 @@ const Login = () => {
           <Grid item xs={8} className={classes.item} container>
             <TextField
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              label='password'
+              onChange={onChangePassword}
+              label={getText('Password')}
               type='password'
               required
               fullWidth
             />
           </Grid>
           <Grid item xs={8} className={classes.item} container>
-            <Button
-              className={classes.button}
-              fullWidth
-              onClick={() => {
-                login({ username, password })
-              }}
-            >
-              Login {loading && <CircularProgress size={20} />}
+            <Button className={classes.button} fullWidth onClick={login}>
+              {getText('Login')} {loading && <CircularProgress size={20} />}
             </Button>
           </Grid>
         </Grid>
@@ -91,5 +91,5 @@ const Login = () => {
 export default {
   name: 'login',
   reducers: userReducer,
-  view: Login
+  view: Login,
 }
