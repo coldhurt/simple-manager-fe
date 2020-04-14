@@ -1,18 +1,4 @@
-import { call, put, takeLatest, takeEvery, delay } from 'redux-saga/effects'
-import {
-  loadedClients,
-  addClientSuccess,
-  clientsFailure
-} from '../client/actions'
-import {
-  FETCH_CLIENTS,
-  ADD_CLIENT,
-  DELETE_CLIENT,
-  TOGGLE_CLIENT,
-  IAddClientAction,
-  IDeleteClientAction,
-  IToggleClientAction
-} from '../client/types'
+import { call, put, takeLatest } from 'redux-saga/effects'
 import {
   ILoginAction,
   USER_LOGIN,
@@ -32,7 +18,7 @@ import {
   IIMSessionAddAction,
   IM_SESSION_ADD,
   IRegisterAction,
-  USER_REGISTER
+  USER_REGISTER,
 } from '../user/types'
 import {
   loginSuccessAction,
@@ -53,49 +39,13 @@ import {
   imSessionAddSuccessAction,
   imSessionAddFailedAction,
   registerSuccessAction,
-  registerFailedAction
+  registerFailedAction,
 } from '../user/actions'
-import { IFetchArticleAction, FETCH_ARTICLES } from '../article/types'
-import { fetchArticlesFailed, fetchArticlesSuccess } from '../article/actions'
 import { Post } from '../../utils'
 import { message } from 'antd'
 
 function myFetch(url: string, body?: Object) {
   return Post(url, body)
-}
-
-function* getAllClients() {
-  try {
-    const json = yield call(myFetch, '/api/client/list')
-    yield put(loadedClients(json.data))
-  } catch (e) {
-    yield put(clientsFailure(e.message))
-  }
-}
-
-function* addClient(action: IAddClientAction) {
-  try {
-    const json = yield call(myFetch, '/api/client/add', action.client)
-    yield put(addClientSuccess(json))
-  } catch (e) {
-    yield put(clientsFailure(e.message))
-  }
-}
-
-function* deleteClient(action: IDeleteClientAction) {
-  try {
-    yield call(myFetch, `/api/client/delete`, { id: action.id })
-  } catch (e) {
-    yield put(clientsFailure(e.message))
-  }
-}
-
-function* updateClient(action: IToggleClientAction) {
-  try {
-    yield call(myFetch, `/api/client/update`, { id: action.id })
-  } catch (e) {
-    yield put(clientsFailure(e.message))
-  }
 }
 
 function* login(action: ILoginAction) {
@@ -124,20 +74,11 @@ function* login(action: ILoginAction) {
 function* fetchUserList(action: IUserListAction) {
   try {
     const json = yield call(myFetch, '/api/admin/list', {
-      nickname: action.nickname
+      nickname: action.nickname,
     })
     yield put(userListSuccessAction(json.data))
   } catch (e) {
     yield put(userListFailedAction(e.message))
-  }
-}
-
-function* fetchArticleList(action: IFetchArticleAction) {
-  try {
-    const json = yield call(myFetch, '/api/article/list')
-    yield put(fetchArticlesSuccess(json.data))
-  } catch (e) {
-    yield put(fetchArticlesFailed(e.message))
   }
 }
 
@@ -153,7 +94,7 @@ function* fetchFriendList(action: IFriendListAction) {
 function* addFriend(action: IFriendAddAction) {
   try {
     const json = yield call(myFetch, '/api/friend/add', {
-      friend_id: action.friend_id
+      friend_id: action.friend_id,
     })
     if (json.success) {
       message.success('添加成功')
@@ -176,7 +117,7 @@ function* fetchUserInfo() {
 function* fetchChatBoxMessage(action: IChatBoxListAction) {
   try {
     const json = yield call(myFetch, '/api/message/list', {
-      session_id: action.session_id
+      session_id: action.session_id,
     })
     yield put(chatBoxListSuccessAction(action.session_id, json.data))
   } catch (e) {
@@ -223,13 +164,8 @@ function* register(action: IRegisterAction) {
 }
 
 function* rootSaga() {
-  yield takeLatest(FETCH_CLIENTS, getAllClients)
-  yield takeLatest(ADD_CLIENT, addClient)
-  yield takeLatest(DELETE_CLIENT, deleteClient)
-  yield takeEvery(TOGGLE_CLIENT, updateClient)
   yield takeLatest(USER_LOGIN, login)
   yield takeLatest(USER_LIST, fetchUserList)
-  yield takeLatest(FETCH_ARTICLES, fetchArticleList)
   yield takeLatest(FRIEND_LIST, fetchFriendList)
   yield takeLatest(FRIEND_ADD, addFriend)
   yield takeLatest(USER_INFO, fetchUserInfo)

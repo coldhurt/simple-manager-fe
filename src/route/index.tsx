@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ConnectedComponent } from 'react-redux'
 import AdminPage from '../view/Admin'
 import { NotFound, LazyLoadModule } from '../components'
@@ -20,12 +20,12 @@ const routes: IRouteItem[] = [
     exact: true,
     component: (props: Object) => (
       <LazyLoadModule {...props} resolve={() => import('../view/IndexPage')} />
-    )
+    ),
   },
   {
     path: '/admin',
     component: AdminPage,
-    exact: true
+    exact: true,
     // isAuthenticated: true,
     // routes: [
     //   {
@@ -85,28 +85,28 @@ const routes: IRouteItem[] = [
     exact: true,
     component: (props: Object) => (
       <LazyLoadModule {...props} resolve={() => import('../view/Login')} />
-    )
+    ),
   },
   {
     path: '/register',
     exact: true,
     component: (props: Object) => (
       <LazyLoadModule {...props} resolve={() => import('../view/Register')} />
-    )
+    ),
   },
   {
     path: ['/NewIM/chat/:id'],
     exact: true,
     component: (props: Object) => (
       <LazyLoadModule {...props} resolve={() => import('../view/NewIM/Chat')} />
-    )
+    ),
   },
   {
     path: ['/NewIM/:tab', '/NewIM'],
     exact: true,
     component: (props: Object) => (
       <LazyLoadModule {...props} resolve={() => import('../view/NewIM')} />
-    )
+    ),
   },
   {
     path: ['/NewIM/friends/add'],
@@ -116,7 +116,7 @@ const routes: IRouteItem[] = [
         {...props}
         resolve={() => import('../view/NewIM/Friends/AddFriend')}
       />
-    )
+    ),
   },
   {
     path: ['/NewIM/user/info'],
@@ -126,7 +126,7 @@ const routes: IRouteItem[] = [
         {...props}
         resolve={() => import('../view/NewIM/User/UserInfo')}
       />
-    )
+    ),
   },
   {
     path: ['/NewIM/user/info/nickname'],
@@ -136,14 +136,14 @@ const routes: IRouteItem[] = [
         {...props}
         resolve={() => import('../view/NewIM/User/ChangeNickName')}
       />
-    )
-  }
+    ),
+  },
 
-  // {
-  //   path: '*',
-  //   exact: true,
-  //   component: NotFound
-  // }
+  {
+    path: '*',
+    exact: true,
+    component: NotFound,
+  },
 ]
 
 const PrivateRoute: React.FC<IRouteItem> = ({
@@ -153,7 +153,7 @@ const PrivateRoute: React.FC<IRouteItem> = ({
   return (
     <Route
       {...rest}
-      render={props => (
+      render={(props) => (
         <Component {...props}>
           {rest.routes && rest.routes.length > 0 ? (
             <div>
@@ -172,9 +172,11 @@ function AllRoute() {
   return (
     <Router>
       <div>
-        {routes.map((route, i) => (
-          <PrivateRoute key={i} {...route} />
-        ))}
+        <Switch>
+          {routes.map((route, i) => (
+            <PrivateRoute key={i} {...route} />
+          ))}
+        </Switch>
         {/* <Route path='*'>
           <NotFound />
         </Route> */}

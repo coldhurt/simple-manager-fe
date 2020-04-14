@@ -5,8 +5,8 @@ const postOptions = {
   method: 'POST',
   body: '',
   headers: new Headers({
-    'Content-Type': 'application/json'
-  })
+    'Content-Type': 'application/json',
+  }),
 }
 
 export interface IResponseJSON {
@@ -21,12 +21,12 @@ interface IResolve {
 }
 
 const Post = (url: string, body = {}) => {
-  return new Promise(function(resolve: IResolve, reject: Function) {
+  return new Promise(function (resolve: IResolve, reject: Function) {
     fetch(url, {
       ...postOptions,
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     })
-      .then(res => {
+      .then((res) => {
         if (res.status !== 200) {
           throw new Error(res.statusText)
         } else {
@@ -48,7 +48,7 @@ const Post = (url: string, body = {}) => {
           resolve(json)
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (err) {
           message.error(err.message)
         }
@@ -56,4 +56,18 @@ const Post = (url: string, body = {}) => {
   })
 }
 
-export { Post }
+const getIdsAndMapData = <T extends { _id: string }>(
+  data: T[]
+): [string[], Record<string, T>] => {
+  const ids = []
+  const res: Record<string, T> = {}
+  for (const item of data) {
+    if (item._id) {
+      ids.push(item._id)
+      res[item._id] = item
+    }
+  }
+  return [ids, res]
+}
+
+export { Post, getIdsAndMapData }
