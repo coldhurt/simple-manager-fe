@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getFriend, getSession } from '../../../store/modules'
+import { getFriend } from '../../../store/modules'
 import {
   Avatar,
   makeStyles,

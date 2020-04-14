@@ -73,7 +73,7 @@ const Register: React.SFC = () => {
         )
       )
     }
-  }, [])
+  }, [dispatch, username, password, confirmPassword, history])
 
   return (
     <Container className={classes.root} disableGutters>

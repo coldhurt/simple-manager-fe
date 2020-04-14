@@ -97,7 +97,7 @@ const ChatMessageList: React.SFC<ChatMessageListProps> = ({
     if (!userInfo) {
       dispatch(userInfoAction())
     }
-  }, [])
+  }, [userInfo, dispatch])
   const chatBoxMessages = useSelector(getChatBoxMessages)
   const messages = chatBoxMessages[session_id] || []
   console.log('session_id', session_id)

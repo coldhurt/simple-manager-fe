@@ -45,7 +45,7 @@ export const sessionListFailedAction = (error: string) => {
     error,
   }
 }
-export const sessionListSuccessAction = (data: ISession[]) => {
+export const sessionListSuccessAction = (data: (ISession | null)[]) => {
   return {
     type: SESSION_LIST_SUCCESS,
     data,
@@ -111,6 +111,13 @@ export const chatBoxListSuccessAction = (
   return {
     type: CHAT_BOX_LIST_SUCCESS,
     session_id,
+    data,
+  }
+}
+
+export const chatBoxAddMessageAction = (data: IMessage) => {
+  return {
+    type: CHAT_BOX_ADD_MESSAGE,
     data,
   }
 }

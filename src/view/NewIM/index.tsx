@@ -77,7 +77,7 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
   location,
   history,
 }) => {
-  const chat = getSocket()
+  getSocket()
   console.log(match.params, location, history)
   const { tab } = match.params
   const route = ['message', 'friends', 'user', 'chat']

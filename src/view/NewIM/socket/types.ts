@@ -1,16 +1,17 @@
-import { IAdmin, IMSession, IMessage } from '../../../store/user/types'
+import { IUserInfo } from '../../../store/modules/auth/types'
+import { ISession, IMessage } from '../../../store/modules/session/types'
 
 export enum MessageType {
   FRIEND_LIST = 1001,
   FRIEND_STATUS = 1002,
   SESSION_LIST = 2001,
   SESSION_ADD = 2002,
-  MESSAGE_RECEIVE = 3001
+  MESSAGE_RECEIVE = 3001,
 }
 
 type FriendList = {
   type: typeof MessageType.FRIEND_LIST
-  data: IAdmin[]
+  data: IUserInfo[]
 }
 
 type FriendStatus = {
@@ -21,12 +22,12 @@ type FriendStatus = {
 
 type SessionList = {
   type: typeof MessageType.SESSION_LIST
-  data: IMSession[]
+  data: ISession[]
 }
 
 type SessionAdd = {
   type: typeof MessageType.SESSION_ADD
-  data: IMSession
+  data: ISession
 }
 
 type MessageReceive = {

@@ -1,18 +1,15 @@
 import { makeStyles, Container, Slide } from '@material-ui/core'
 import * as React from 'react'
 import { IMessage, IAdmin, IMSession } from '../../../store/user/types'
-import { AppState, getSession, getFriend } from '../../../store/modules'
-import { connect, useSelector, useDispatch } from 'react-redux'
-import {
-  friendListAction,
-  imSessionListAction,
-} from '../../../store/user/actions'
+import { getSession, getFriend } from '../../../store/modules'
+import { useSelector, useDispatch } from 'react-redux'
 import { HeaderBar } from '../../../components'
 import { useParams } from 'react-router-dom'
 import InputBar from './InputBar'
 import getSocket from '../socket/index'
-import ChatMessageList, { scrollToBottom } from './ChatMessageList'
+import ChatMessageList from './ChatMessageList'
 import { sessionListAction } from '../../../store/modules/session'
+import { friendListAction } from '../../../store/modules/friend'
 
 const useStyles = makeStyles({
   root: {

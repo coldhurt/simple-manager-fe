@@ -49,7 +49,7 @@ const Login = () => {
   const dispatch = useDispatch()
   const login = useCallback(
     () => dispatch(loginAction({ username, password })),
-    [dispatch]
+    [dispatch, username, password]
   )
   const onChangeUsername = useCallback((e) => setUsername(e.target.value), [])
   const onChangePassword = useCallback((e) => setPassword(e.target.value), [])
