@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { getFriend } from '../../../store/modules'
+import { getFriend, getSession } from '../../../store/modules'
 import {
   Avatar,
   makeStyles,
@@ -71,11 +71,17 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
 const Friends: React.SFC = () => {
   const dispatch = useDispatch()
   const { friends, friend_ids } = useSelector(getFriend)
-  // const {sessions, session_ids} = useSelector(getSession)
+  const { sessions, session_ids } = useSelector(getSession)
   React.useEffect(() => {
     if (friend_ids.length === 0) dispatch(friendListAction())
   }, [dispatch, friend_ids])
   const onAddSession = (data: { friend_id: string }) => {
+    for (const session_id of session_ids) {
+      const session = sessions[session_id]
+      if (session && session.friend_id === data.friend_id) {
+        return
+      }
+    }
     dispatch(sessionAddAction(data))
   }
   const classes = useStyles()

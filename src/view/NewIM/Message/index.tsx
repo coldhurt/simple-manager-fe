@@ -16,9 +16,14 @@ import {
   LinkProps as RouterLinkProps,
 } from 'react-router-dom'
 import { ISession } from '../../../store/modules/session/types'
-import { sessionListAction } from '../../../store/modules/session'
+import {
+  sessionListAction,
+  sessionDeleteAction,
+} from '../../../store/modules/session'
 import { friendListAction } from '../../../store/modules/friend'
 import { IUserInfo } from '../../../store/modules/auth/types'
+import { Modal } from 'antd'
+import getSocket from '../socket'
 
 const useStyles = makeStyles({
   root: {
@@ -34,10 +39,12 @@ const useStyles = makeStyles({
 interface SessionItemProps {
   session: ISession
   user: IUserInfo | null
+  onDelete(id: string): void
 }
 
 const SessionItem: React.SFC<SessionItemProps> = React.memo(
-  ({ session, user }) => {
+  ({ session, user, onDelete }) => {
+    const chat = getSocket()
     const classes = useStyles()
     const { friend_id, lastMessage, _id, unread } = session
     const renderLink = React.useMemo(
@@ -47,10 +54,31 @@ const SessionItem: React.SFC<SessionItemProps> = React.memo(
         )),
       [_id]
     )
+    // const dispatch = useDispatch()
+    let ver: NodeJS.Timeout | null = null
+    const onTouchStart = () => {
+      ver = setTimeout(() => {
+        Modal.confirm({
+          okText: '确定',
+          cancelText: '取消',
+          title: `确定删除会话吗？`,
+          onOk: () => {
+            // chat.deleteSession(_id)
+            onDelete(_id)
+          },
+        })
+      }, 1000)
+    }
+    const onTouchEnd = () => ver && clearTimeout(ver)
 
     return (
       <li>
-        <ListItem button component={renderLink}>
+        <ListItem
+          button
+          component={renderLink}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <ListItemIcon>
             <Badge
               badgeContent={unread}
@@ -76,9 +104,12 @@ const MessageList: React.SFC = () => {
   const { friends, friend_ids } = useSelector(getFriend)
   React.useEffect(() => {
     dispatch(sessionListAction())
+  }, [dispatch])
+  React.useEffect(() => {
     if (friend_ids.length === 0) dispatch(friendListAction())
   }, [friend_ids, dispatch])
   const classes = useStyles()
+  const onDeleteSession = (id: string) => dispatch(sessionDeleteAction(id))
   return listLoading ? (
     <CircularProgress />
   ) : (
@@ -88,6 +119,7 @@ const MessageList: React.SFC = () => {
         return session ? (
           <SessionItem
             key={item}
+            onDelete={onDeleteSession}
             session={session}
             user={friends[session.friend_id]}
           />

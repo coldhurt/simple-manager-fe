@@ -43,6 +43,8 @@ import {
   CHAT_BOX_LIST,
   SESSION_ADD,
   SESSION_LIST,
+  ISessionDeleteAction,
+  SESSION_DELETE,
 } from '../modules/session/types'
 import {
   chatBoxListSuccessAction,
@@ -51,6 +53,8 @@ import {
   sessionListFailedAction,
   sessionAddSuccessAction,
   sessionAddFailedAction,
+  sessionDeleteSuccessAction,
+  sessionDeleteFailedAction,
 } from '../modules/session'
 
 function myFetch(url: string, body?: Object) {
@@ -172,6 +176,17 @@ function* register(action: IRegisterAction) {
   }
 }
 
+function* deleteSession(action: ISessionDeleteAction) {
+  try {
+    yield call(myFetch, '/api/session/delete', {
+      session_id: action.session_id,
+    })
+    yield put(sessionDeleteSuccessAction(action.session_id))
+  } catch (e) {
+    yield put(sessionDeleteFailedAction(e.message))
+  }
+}
+
 function* rootSaga() {
   yield takeLatest(USER_LOGIN, login)
   yield takeLatest(USER_LIST, fetchUserList)
@@ -182,6 +197,7 @@ function* rootSaga() {
   yield takeLatest(UPDATE_USER_INFO, updateUserInfo)
   yield takeLatest(SESSION_LIST, fetchSessionList)
   yield takeLatest(SESSION_ADD, addSession)
+  yield takeLatest(SESSION_DELETE, deleteSession)
   yield takeLatest(USER_REGISTER, register)
 }
 

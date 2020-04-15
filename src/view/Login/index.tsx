@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import userReducer from '../../store/user/reducers'
 import {
   Button,
   Container,
@@ -13,6 +12,7 @@ import {
 import { getAuth } from '../../store/modules'
 import { loginAction } from '../../store/modules/auth'
 import getText from '../../i18n'
+import { Link } from 'react-router-dom'
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
@@ -77,10 +77,26 @@ const Login = () => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={8} className={classes.item} container>
-            <Button className={classes.button} fullWidth onClick={login}>
-              {getText('Login')} {loading && <CircularProgress size={20} />}
-            </Button>
+          <Grid
+            item
+            xs={8}
+            direction='row'
+            spacing={2}
+            className={classes.item}
+            container
+          >
+            <Grid>
+              <Button className={classes.button} fullWidth onClick={login}>
+                {getText('Login')} {loading && <CircularProgress size={20} />}
+              </Button>
+            </Grid>
+            <Grid>
+              <Link to='/register'>
+                <Button className={classes.button} fullWidth>
+                  {getText('注册')} {loading && <CircularProgress size={20} />}
+                </Button>
+              </Link>
+            </Grid>
           </Grid>
         </Grid>
       </CssBaseline>
@@ -90,6 +106,6 @@ const Login = () => {
 
 export default {
   name: 'login',
-  reducers: userReducer,
+  // reducers: userReducer,
   view: Login,
 }

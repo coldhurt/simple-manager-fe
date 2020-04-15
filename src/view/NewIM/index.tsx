@@ -85,7 +85,7 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
     history.push('/NewIM/message')
   }
 
-  const { sessions } = useSelector(getSession)
+  const { sessions, chatboxMessage } = useSelector(getSession)
   const unread = React.useMemo(() => {
     const values = Object.values(sessions)
     let unread = 0

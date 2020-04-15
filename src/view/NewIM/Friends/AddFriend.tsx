@@ -11,7 +11,6 @@ import {
   Button,
 } from '@material-ui/core'
 import * as React from 'react'
-import { IAdmin } from '../../../store/user/types'
 import { HeaderBar } from '../../../components'
 import { commonPageStyle } from '../styles'
 import { useSelector, useDispatch } from 'react-redux'
@@ -34,7 +33,7 @@ const useStyles = makeStyles({
 })
 
 interface FriendItemProps {
-  friend: IAdmin
+  friend: IUserInfo
   friendAdd(): void
 }
 
@@ -66,7 +65,7 @@ const AddFriend: React.SFC = () => {
     Modal.confirm({
       title: `确定添加${data.nickname || data.username}为好友吗`,
       onOk: () => {
-        friendAddAction(data._id)
+        dispatch(friendAddAction(data._id))
       },
     })
   }

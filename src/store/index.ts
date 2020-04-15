@@ -8,6 +8,7 @@ import {
   applyMiddleware,
   ReducersMapObject,
   combineReducers,
+  Middleware,
 } from 'redux'
 import { reducerMaps } from './modules'
 
@@ -48,9 +49,11 @@ const createMyStore = (reducerMap: ReducersMapObject) => {
   }
   const sagaMiddleware = createSagaMiddleware()
 
+  const middwares: Middleware[] = [sagaMiddleware]
+  if (process.env.NODE_ENV === 'development') middwares.push(logger)
   const store: IMyStore = createStore(
     combineReducers(reducerMap),
-    applyMiddleware(logger, sagaMiddleware)
+    applyMiddleware(...middwares)
   ) as IMyStore
   sagaMiddleware.run(rootSaga)
   store.asyncReducers = {}

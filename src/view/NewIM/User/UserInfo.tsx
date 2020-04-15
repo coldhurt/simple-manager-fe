@@ -55,8 +55,8 @@ const UserInfo: React.SFC = () => {
     if (files && files[0]) {
       console.log(files[0])
       const file = files[0]
-      if (file.size > 1024000) {
-        message.error('图片大小不能大于1MB')
+      if (file.size > 2048000) {
+        message.error('图片大小不能大于2MB')
         return
       }
 

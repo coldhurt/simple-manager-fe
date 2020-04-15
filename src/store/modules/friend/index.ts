@@ -181,6 +181,21 @@ export default function friendReducer(
           (item) => item !== action.friend_id
         ),
       }
+    case USER_LIST:
+      return {
+        ...state,
+        users: [],
+      }
+    case USER_LIST_SUCCESS:
+      return {
+        ...state,
+        users: action.data,
+      }
+    case USER_LIST_FAILED:
+      return {
+        ...state,
+        users: [],
+      }
     default:
       return state
   }

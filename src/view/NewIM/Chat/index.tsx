@@ -1,6 +1,5 @@
 import { makeStyles, Container, Slide } from '@material-ui/core'
 import * as React from 'react'
-import { IMessage, IAdmin, IMSession } from '../../../store/user/types'
 import { getSession, getFriend } from '../../../store/modules'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderBar } from '../../../components'
@@ -27,14 +26,6 @@ const useStyles = makeStyles({
     backgroundSize: 'cover',
   },
 })
-
-interface ChatProps {
-  friends: IAdmin[]
-  imSessions: IMSession[]
-  friendList(): void
-  imSessionList(): void
-  chatBoxAddMessage(message: IMessage): void
-}
 
 const Chat: React.SFC = () => {
   const chat = getSocket()
@@ -63,7 +54,7 @@ const Chat: React.SFC = () => {
 
   const onSend = (msg: string) => {
     if (msg && chat) {
-      chat.emit('send', {
+      chat.sendMessage({
         session_id,
         message: msg,
       })

@@ -83,7 +83,7 @@ const Register: React.SFC = () => {
             <TextField
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              label={getText('Password')}
+              label={getText('Username')}
               required
               fullWidth
             />
