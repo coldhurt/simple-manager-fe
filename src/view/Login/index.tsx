@@ -81,8 +81,8 @@ const Login = () => {
             item
             xs={8}
             direction='row'
+            justify='space-evenly'
             spacing={2}
-            className={classes.item}
             container
           >
             <Grid>
@@ -93,7 +93,7 @@ const Login = () => {
             <Grid>
               <Link to='/register'>
                 <Button className={classes.button} fullWidth>
-                  {getText('注册')} {loading && <CircularProgress size={20} />}
+                  {getText('Register')}{' '}
                 </Button>
               </Link>
             </Grid>

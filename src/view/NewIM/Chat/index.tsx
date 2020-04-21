@@ -1,65 +1,73 @@
 import { makeStyles, Container, Slide } from '@material-ui/core'
-import * as React from 'react'
+import React, { useState, useCallback } from 'react'
 import { getSession, getFriend } from '../../../store/modules'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { HeaderBar } from '../../../components'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import InputBar from './InputBar'
 import getSocket from '../socket/index'
 import ChatMessageList from './ChatMessageList'
-import { sessionListAction } from '../../../store/modules/session'
-import { friendListAction } from '../../../store/modules/friend'
+import { message } from 'antd'
 
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
-  content: {
-    position: 'fixed',
-    top: 56,
-    bottom: 56,
-    left: 0,
-    right: 0,
-    overflowY: 'scroll',
-    padding: 10,
-    backgroundImage: 'url("/images/chatbox1.jpg")',
-    backgroundSize: 'cover',
-  },
 })
 
 const Chat: React.SFC = () => {
   const chat = getSocket()
+  const history = useHistory()
   const classes = useStyles()
-  const dispatch = useDispatch()
   const params = useParams<{ id: string }>()
+  const [showEmoji, setShowEmoji] = useState(false)
+  const [showPane, setShowPane] = useState(false)
   const session_id = params.id
   const { friends, friend_ids } = useSelector(getFriend)
   const { sessions, session_ids } = useSelector(getSession)
   React.useEffect(() => {
     if (friend_ids.length === 0) {
-      dispatch(friendListAction())
+      chat.getFriends()
     }
-  }, [friend_ids, dispatch])
+  }, [friend_ids, chat])
   React.useEffect(() => {
     if (session_ids.length === 0) {
-      dispatch(sessionListAction())
+      chat.getSessions()
     }
-  }, [session_ids, dispatch])
+  }, [chat])
 
   const targetSession = sessions[session_id]
+  if (
+    Array.isArray(session_ids) &&
+    session_ids.includes(session_id) &&
+    !targetSession
+  ) {
+    message.error('目标会话不存在')
+    history.goBack()
+  }
   let friend_id = targetSession ? targetSession.friend_id : null
-  console.log('friend_id', friend_id)
   let target = null
   if (friend_id) target = friends[friend_id]
 
-  const onSend = (msg: string) => {
-    if (msg && chat) {
-      chat.sendMessage({
-        session_id,
-        message: msg,
-      })
-    }
-  }
+  const onSend = useCallback(
+    (msg: string) => {
+      if (msg && chat) {
+        chat.sendMessage({
+          session_id,
+          message: msg,
+        })
+      }
+    },
+    [chat, session_id]
+  )
+
+  const toggleEmoji = useCallback(() => setShowEmoji(!showEmoji), [showEmoji])
+  const togglePane = useCallback(() => setShowPane(!showPane), [showPane])
+
+  const closePane = useCallback(() => {
+    setShowEmoji(false)
+    setShowPane(false)
+  }, [])
   return (
     target && (
       <Slide
@@ -73,8 +81,18 @@ const Chat: React.SFC = () => {
             title={target.nickname || target.username || ''}
             showBack={true}
           />
-          <ChatMessageList session_id={session_id} target={target} />
-          <InputBar onSend={onSend} />
+          <ChatMessageList
+            session_id={session_id}
+            target={target}
+            onClickList={closePane}
+          />
+          <InputBar
+            onSend={onSend}
+            showEmoji={showEmoji}
+            showPane={showPane}
+            togglePane={togglePane}
+            toggleEmoji={toggleEmoji}
+          />
         </Container>
       </Slide>
     )

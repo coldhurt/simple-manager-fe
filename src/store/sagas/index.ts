@@ -127,16 +127,16 @@ function* fetchUserInfo() {
   }
 }
 
-function* fetchChatBoxMessage(action: IChatBoxListAction) {
-  try {
-    const json = yield call(myFetch, '/api/message/list', {
-      session_id: action.session_id,
-    })
-    yield put(chatBoxListSuccessAction(action.session_id, json.data))
-  } catch (e) {
-    yield put(chatBoxListFailedAction(e.message))
-  }
-}
+// function* fetchChatBoxMessage(action: IChatBoxListAction) {
+//   try {
+//     const json = yield call(myFetch, '/api/message/list', {
+//       session_id: action.session_id,
+//     })
+//     yield put(chatBoxListSuccessAction(action.session_id, json.data))
+//   } catch (e) {
+//     yield put(chatBoxListFailedAction(e.message))
+//   }
+// }
 
 function* updateUserInfo(action: IUpdateUserInfoAction) {
   try {
@@ -190,14 +190,14 @@ function* deleteSession(action: ISessionDeleteAction) {
 function* rootSaga() {
   yield takeLatest(USER_LOGIN, login)
   yield takeLatest(USER_LIST, fetchUserList)
-  yield takeLatest(FRIEND_LIST, fetchFriendList)
+  // yield takeLatest(FRIEND_LIST, fetchFriendList)
   yield takeLatest(FRIEND_ADD, addFriend)
   yield takeLatest(USER_INFO, fetchUserInfo)
-  yield takeLatest(CHAT_BOX_LIST, fetchChatBoxMessage)
+  // yield takeLatest(CHAT_BOX_LIST, fetchChatBoxMessage)
   yield takeLatest(UPDATE_USER_INFO, updateUserInfo)
-  yield takeLatest(SESSION_LIST, fetchSessionList)
-  yield takeLatest(SESSION_ADD, addSession)
-  yield takeLatest(SESSION_DELETE, deleteSession)
+  // yield takeLatest(SESSION_LIST, fetchSessionList)
+  // yield takeLatest(SESSION_ADD, addSession)
+  // yield takeLatest(SESSION_DELETE, deleteSession)
   yield takeLatest(USER_REGISTER, register)
 }
 

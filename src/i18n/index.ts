@@ -40,6 +40,14 @@ const i18nData: Record<string, MultiLangText> = {
     en: 'Search',
     zh: '搜索',
   },
+  Send: {
+    en: 'Send',
+    zh: '发送',
+  },
+  Logout: {
+    en: 'Logout',
+    zh: '退出',
+  },
 }
 
 const getText = (key: string) => {

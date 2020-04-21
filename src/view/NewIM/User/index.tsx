@@ -13,9 +13,15 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
+  useHistory,
 } from 'react-router-dom'
 import { getAuth } from '../../../store/modules'
 import { userInfoAction } from '../../../store/modules/auth'
+import getSocket from '../socket'
+import { HeaderBar } from '../../../components'
+import getText from '../../../i18n'
+import { Modal } from 'antd'
+import { Post } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
@@ -23,7 +29,7 @@ const useStyles = makeStyles({
   },
   user: {
     background: '#eee',
-    marginTop: 10,
+    marginTop: 60,
     padding: 10,
     alignItems: 'center',
   },
@@ -33,8 +39,10 @@ const useStyles = makeStyles({
 })
 
 const User: React.SFC = () => {
+  getSocket()
   const userInfo = useSelector(getAuth).userInfo
   const dispatch = useDispatch()
+  const history = useHistory()
   React.useEffect(() => {
     if (!userInfo) {
       dispatch(userInfoAction())
@@ -48,8 +56,29 @@ const User: React.SFC = () => {
       )),
     []
   )
+  const onLogout = () => {
+    Modal.confirm({
+      okText: '确定',
+      cancelText: '取消',
+      title: `确定退出吗？`,
+      onOk: () => {
+        Post('/api/admin/logout').then(() => {
+          history.push('/login')
+        })
+        // alert('退出')
+        // chat.deleteSession(_id)
+        // onDelete(_id)
+      },
+    })
+  }
   return userInfo ? (
     <Container className={classes.root}>
+      <HeaderBar
+        title={(userInfo && userInfo.nickname) || ''}
+        showBack={false}
+        rightText={getText('Logout')}
+        onRight={onLogout}
+      />
       <List disablePadding>
         <ListItem
           button

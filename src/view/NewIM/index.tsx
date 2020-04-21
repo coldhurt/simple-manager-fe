@@ -78,7 +78,7 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
   history,
 }) => {
   getSocket()
-  console.log(match.params, location, history)
+  // console.log(match.params, location, history)
   const { tab } = match.params
   const route = ['message', 'friends', 'user', 'chat']
   if (!route.includes(tab)) {

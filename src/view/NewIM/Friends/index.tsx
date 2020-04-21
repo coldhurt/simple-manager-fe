@@ -9,16 +9,19 @@ import {
   ListItemText,
   List,
   Fab,
+  CircularProgress,
 } from '@material-ui/core'
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
   Link,
+  useHistory,
 } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
 import { sessionAddAction } from '../../../store/modules/session'
 import { friendListAction } from '../../../store/modules/friend'
 import { IUserInfo } from '../../../store/modules/auth/types'
+import getSocket from '../socket'
 
 const useStyles = makeStyles({
   root: {
@@ -38,27 +41,15 @@ const useStyles = makeStyles({
 
 interface FriendItemProps {
   friend: IUserInfo
-  sessionAdd(session: { friend_id: string }): void
+  sessionAdd(friend_id: string): void
 }
 
 const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
   const classes = useStyles()
   const { _id, avatar, username, nickname } = friend
-  const renderLink = React.useMemo(
-    () =>
-      React.forwardRef<any, Omit<RouterLinkProps, 'to'>>((itemProps, ref) => (
-        <RouterLink to={`/NewIM/chat/${_id}`} ref={ref} {...itemProps} />
-      )),
-    [_id]
-  )
-
   return (
     <li>
-      <ListItem
-        button
-        component={renderLink}
-        onClick={() => sessionAdd({ friend_id: _id || '' })}
-      >
+      <ListItem button onClick={() => sessionAdd(_id || '')}>
         <ListItemIcon>
           <Avatar src={avatar} className={classes.avatar} />
         </ListItemIcon>
@@ -69,32 +60,48 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
 }
 
 const Friends: React.SFC = () => {
-  const dispatch = useDispatch()
-  const { friends, friend_ids } = useSelector(getFriend)
+  const chat = getSocket()
+  const { friends, friend_ids, listLoading } = useSelector(getFriend)
   const { sessions, session_ids } = useSelector(getSession)
+  const history = useHistory()
   React.useEffect(() => {
-    if (friend_ids.length === 0) dispatch(friendListAction())
-  }, [dispatch, friend_ids])
-  const onAddSession = (data: { friend_id: string }) => {
-    for (const session_id of session_ids) {
-      const session = sessions[session_id]
-      if (session && session.friend_id === data.friend_id) {
-        return
+    if (friend_ids.length === 0) chat.getFriends()
+  }, [chat, friend_ids])
+  React.useEffect(() => {
+    if (session_ids.length === 0) chat.getSessions()
+  }, [chat, session_ids])
+  const onAddSession = (friend_id: string) => {
+    if (friend_id) {
+      for (const session_id of session_ids) {
+        const session = sessions[session_id]
+        if (session && session.friend_id === friend_id) {
+          // return
+          history.push('/NewIM/chat/' + session_id)
+          return
+        }
       }
+      chat.addSession(friend_id)
     }
-    dispatch(sessionAddAction(data))
   }
   const classes = useStyles()
   return (
     <div>
-      <List className={classes.root}>
-        {friend_ids.map((item) => {
-          const friend = friends[item]
-          return friend ? (
-            <FriendItem key={item} friend={friend} sessionAdd={onAddSession} />
-          ) : null
-        })}
-      </List>
+      {listLoading ? (
+        <CircularProgress />
+      ) : (
+        <List className={classes.root}>
+          {friend_ids.map((item) => {
+            const friend = friends[item]
+            return friend ? (
+              <FriendItem
+                key={item}
+                friend={friend}
+                sessionAdd={onAddSession}
+              />
+            ) : null
+          })}
+        </List>
+      )}
       <Link to='/NewIM/friends/add'>
         <Fab color='primary' aria-label='add' className={classes.add}>
           <AddIcon />

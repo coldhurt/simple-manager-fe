@@ -99,17 +99,19 @@ const SessionItem: React.SFC<SessionItemProps> = React.memo(
 )
 
 const MessageList: React.SFC = () => {
-  const dispatch = useDispatch()
+  const chat = getSocket()
   const { sessions, session_ids, listLoading } = useSelector(getSession)
   const { friends, friend_ids } = useSelector(getFriend)
   React.useEffect(() => {
-    dispatch(sessionListAction())
-  }, [dispatch])
+    chat.getSessions()
+  }, [chat])
   React.useEffect(() => {
-    if (friend_ids.length === 0) dispatch(friendListAction())
-  }, [friend_ids, dispatch])
+    if (friend_ids.length === 0) chat.getFriends()
+  }, [chat, friend_ids])
   const classes = useStyles()
-  const onDeleteSession = (id: string) => dispatch(sessionDeleteAction(id))
+  const onDeleteSession = (id: string) => {
+    chat.deleteSession(id)
+  }
   return listLoading ? (
     <CircularProgress />
   ) : (

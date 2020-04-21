@@ -65,7 +65,7 @@ export const sessionAddFailedAction = (error: string) => {
   }
 }
 
-export const sessionAddSuccessAction = (data: ISession[]) => {
+export const sessionAddSuccessAction = (data: ISession[] | ISession) => {
   return {
     type: SESSION_ADD_SUCCESS,
     data,

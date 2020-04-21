@@ -10,7 +10,7 @@ import {
   makeStyles,
 } from '@material-ui/core'
 import { message } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import getText from '../../i18n'
 import { useDispatch } from 'react-redux'
 
@@ -108,10 +108,19 @@ const Register: React.SFC = () => {
               fullWidth
             />
           </Grid>
-          <Grid item xs={8} className={classes.item} container>
-            <Button className={classes.button} fullWidth onClick={onRegister}>
-              {getText('Register')}
-            </Button>
+          <Grid item xs={8} container direction='row' justify='space-evenly'>
+            <Grid>
+              <Button className={classes.button} fullWidth onClick={onRegister}>
+                {getText('Register')}
+              </Button>
+            </Grid>
+            <Grid>
+              <Link to='/login'>
+                <Button className={classes.button} fullWidth>
+                  {getText('Login')}
+                </Button>
+              </Link>
+            </Grid>
           </Grid>
         </Grid>
       </CssBaseline>
