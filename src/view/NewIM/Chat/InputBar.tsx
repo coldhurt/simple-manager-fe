@@ -94,7 +94,7 @@ const InputBar: React.SFC<InputBarProps> = ({
           </Button>
         </Grid>
       </Grid>
-      {showEmoji && <Picker onSelect={addEmoji} />}
+      {showEmoji && <Picker darkMode onSelect={addEmoji} />}
     </Grid>
   )
 }

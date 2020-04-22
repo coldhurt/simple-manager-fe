@@ -70,4 +70,12 @@ const getIdsAndMapData = <T extends { _id: string }>(
   return [ids, res]
 }
 
-export { Post, getIdsAndMapData }
+const getLocalStorage = (k: string) => {
+  if (localStorage) return localStorage.getItem(k)
+}
+
+const setLocalStorage = (k: string, v: string) => {
+  if (localStorage) return localStorage.setItem(k, v)
+}
+
+export { Post, getIdsAndMapData, getLocalStorage, setLocalStorage }

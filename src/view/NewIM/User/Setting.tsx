@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getTheme } from '../../../store/modules'
 import { changeThemeAction } from '../../../store/modules/setting'
 import { HeaderBar } from '../../../components'
+import { ThemeType } from '../../../store/modules/setting/types'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +29,11 @@ function Setting() {
   const theme = useSelector(getTheme)
   const dispatch = useDispatch()
   const onChangeTheme = () => {
-    dispatch(changeThemeAction(theme === 'light' ? 'night' : 'light'))
+    dispatch(
+      changeThemeAction(
+        theme === ThemeType.LIGHT ? ThemeType.NIGHT : ThemeType.LIGHT
+      )
+    )
   }
 
   return (

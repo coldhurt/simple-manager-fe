@@ -6,7 +6,10 @@ export const actionTypes = {
   THEME_CHANGE,
 }
 
-export type ThemeType = 'night' | 'light'
+export enum ThemeType {
+  LIGHT = 'light',
+  NIGHT = 'night',
+}
 
 export interface ISettingState {
   theme: ThemeType
