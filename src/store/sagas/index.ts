@@ -22,40 +22,39 @@ import {
 } from '../modules/auth'
 import {
   IUserListAction,
-  IFriendListAction,
+  // IFriendListAction,
   IFriendAddAction,
   USER_LIST,
-  FRIEND_LIST,
+  // FRIEND_LIST,
   FRIEND_ADD,
 } from '../modules/friend/types'
 import {
   userListSuccessAction,
   userListFailedAction,
-  friendListSuccessAction,
-  friendListFailedAction,
+  // friendListSuccessAction,
+  // friendListFailedAction,
   friendAddSuccessAction,
   friendAddFailedAction,
 } from '../modules/friend'
-import {
-  IChatBoxListAction,
-  ISessionListAction,
-  ISessionAddAction,
-  CHAT_BOX_LIST,
-  SESSION_ADD,
-  SESSION_LIST,
-  ISessionDeleteAction,
-  SESSION_DELETE,
-} from '../modules/session/types'
-import {
-  chatBoxListSuccessAction,
-  chatBoxListFailedAction,
-  sessionListSuccessAction,
-  sessionListFailedAction,
-  sessionAddSuccessAction,
-  sessionAddFailedAction,
-  sessionDeleteSuccessAction,
-  sessionDeleteFailedAction,
-} from '../modules/session'
+// import {
+//   ISessionListAction,
+//   ISessionAddAction,
+//   CHAT_BOX_LIST,
+//   SESSION_ADD,
+//   SESSION_LIST,
+//   ISessionDeleteAction,
+//   SESSION_DELETE,
+// } from '../modules/session/types'
+// import {
+//   chatBoxListSuccessAction,
+//   chatBoxListFailedAction,
+//   sessionListSuccessAction,
+//   sessionListFailedAction,
+//   sessionAddSuccessAction,
+//   sessionAddFailedAction,
+//   sessionDeleteSuccessAction,
+//   sessionDeleteFailedAction,
+// } from '../modules/session'
 
 function myFetch(url: string, body?: Object) {
   return Post(url, body)
@@ -95,14 +94,14 @@ function* fetchUserList(action: IUserListAction) {
   }
 }
 
-function* fetchFriendList(action: IFriendListAction) {
-  try {
-    const json = yield call(myFetch, '/api/friend/list')
-    yield put(friendListSuccessAction(json.data))
-  } catch (e) {
-    yield put(friendListFailedAction(e.message))
-  }
-}
+// function* fetchFriendList(action: IFriendListAction) {
+//   try {
+//     const json = yield call(myFetch, '/api/friend/list')
+//     yield put(friendListSuccessAction(json.data))
+//   } catch (e) {
+//     yield put(friendListFailedAction(e.message))
+//   }
+// }
 
 function* addFriend(action: IFriendAddAction) {
   try {
@@ -148,23 +147,23 @@ function* updateUserInfo(action: IUpdateUserInfoAction) {
   }
 }
 
-function* fetchSessionList(action: ISessionListAction) {
-  try {
-    const json = yield call(myFetch, '/api/session/list')
-    yield put(sessionListSuccessAction(json.data))
-  } catch (e) {
-    yield put(sessionListFailedAction(e.message))
-  }
-}
+// function* fetchSessionList(action: ISessionListAction) {
+//   try {
+//     const json = yield call(myFetch, '/api/session/list')
+//     yield put(sessionListSuccessAction(json.data))
+//   } catch (e) {
+//     yield put(sessionListFailedAction(e.message))
+//   }
+// }
 
-function* addSession(action: ISessionAddAction) {
-  try {
-    const json = yield call(myFetch, '/api/session/add', action.data)
-    yield put(sessionAddSuccessAction(json.data))
-  } catch (e) {
-    yield put(sessionAddFailedAction(e.message))
-  }
-}
+// function* addSession(action: ISessionAddAction) {
+//   try {
+//     const json = yield call(myFetch, '/api/session/add', action.data)
+//     yield put(sessionAddSuccessAction(json.data))
+//   } catch (e) {
+//     yield put(sessionAddFailedAction(e.message))
+//   }
+// }
 
 function* register(action: IRegisterAction) {
   try {
@@ -176,16 +175,16 @@ function* register(action: IRegisterAction) {
   }
 }
 
-function* deleteSession(action: ISessionDeleteAction) {
-  try {
-    yield call(myFetch, '/api/session/delete', {
-      session_id: action.session_id,
-    })
-    yield put(sessionDeleteSuccessAction(action.session_id))
-  } catch (e) {
-    yield put(sessionDeleteFailedAction(e.message))
-  }
-}
+// function* deleteSession(action: ISessionDeleteAction) {
+//   try {
+//     yield call(myFetch, '/api/session/delete', {
+//       session_id: action.session_id,
+//     })
+//     yield put(sessionDeleteSuccessAction(action.session_id))
+//   } catch (e) {
+//     yield put(sessionDeleteFailedAction(e.message))
+//   }
+// }
 
 function* rootSaga() {
   yield takeLatest(USER_LOGIN, login)

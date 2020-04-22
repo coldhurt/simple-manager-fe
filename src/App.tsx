@@ -9,7 +9,13 @@ import {
   hideMessageAction,
 } from './store/modules/util/actions'
 import { AppState } from './store/modules'
-import { Container, CssBaseline, makeStyles } from '@material-ui/core'
+import {
+  Container,
+  CssBaseline,
+  makeStyles,
+  ThemeProvider,
+} from '@material-ui/core'
+import { darkTheme } from './theme'
 
 export type MessageActionProps = {
   util: IUtilState
@@ -17,28 +23,37 @@ export type MessageActionProps = {
   hideMessageAction(): void
 }
 
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-    backgroundColor: '#fff',
-    height: '100vh',
-    display: 'flex',
-    // alignContent: 'center',
-    // justifyContent: 'center',
-    flexDirection: 'column',
-  },
-})
+export interface MyTheme {
+  color: string
+  backgroundColor: string
+}
 
-const App: React.SFC<MessageActionProps> = ({ util, hideMessageAction }) => {
+const useStyles = makeStyles((theme: MyTheme) => ({
+  root: {
+    backgroundColor: theme.backgroundColor,
+    color: theme.color,
+  },
+}))
+
+const AppComponent = () => {
   const classes = useStyles()
   return (
+    <Container className={classes.root} disableGutters>
+      <CssBaseline>
+        <Router />
+      </CssBaseline>
+    </Container>
+  )
+}
+
+const App: React.SFC<MessageActionProps> = ({ util, hideMessageAction }) => {
+  console.log(darkTheme)
+  return (
     <div className='app-container'>
-      <Message {...util.message} handleClose={hideMessageAction} />
-      <Container className={classes.root} disableGutters>
-        <CssBaseline>
-          <Router />
-        </CssBaseline>
-      </Container>
+      <ThemeProvider theme={darkTheme}>
+        <Message {...util.message} handleClose={hideMessageAction} />
+        <AppComponent />
+      </ThemeProvider>
     </div>
   )
 }

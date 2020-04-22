@@ -29,12 +29,12 @@ const Chat: React.SFC = () => {
     if (friend_ids.length === 0) {
       chat.getFriends()
     }
-  }, [friend_ids, chat])
+  }, [friend_ids.length, chat])
   React.useEffect(() => {
     if (session_ids.length === 0) {
       chat.getSessions()
     }
-  }, [chat])
+  }, [chat, session_ids.length])
 
   const targetSession = sessions[session_id]
   if (

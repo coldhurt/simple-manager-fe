@@ -8,7 +8,6 @@ const commonPageStyle = makeStyles({
     left: 0,
     right: 0,
     zIndex: 10,
-    background: '#fff'
   },
   content: {
     position: 'fixed',
@@ -18,10 +17,7 @@ const commonPageStyle = makeStyles({
     right: 0,
     overflowY: 'scroll',
     padding: 10,
-    background: '#fff'
-    // backgroundImage: 'url("/images/chatbox1.jpg")',
-    // backgroundSize: 'cover'
-  }
+  },
 })
 
 export { commonPageStyle }

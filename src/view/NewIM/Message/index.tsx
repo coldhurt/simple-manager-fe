@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getSession, getFriend } from '../../../store/modules'
 import {
   Avatar,
@@ -16,11 +16,6 @@ import {
   LinkProps as RouterLinkProps,
 } from 'react-router-dom'
 import { ISession } from '../../../store/modules/session/types'
-import {
-  sessionListAction,
-  sessionDeleteAction,
-} from '../../../store/modules/session'
-import { friendListAction } from '../../../store/modules/friend'
 import { IUserInfo } from '../../../store/modules/auth/types'
 import { Modal } from 'antd'
 import getSocket from '../socket'
@@ -44,7 +39,7 @@ interface SessionItemProps {
 
 const SessionItem: React.SFC<SessionItemProps> = React.memo(
   ({ session, user, onDelete }) => {
-    const chat = getSocket()
+    getSocket()
     const classes = useStyles()
     const { friend_id, lastMessage, _id, unread } = session
     const renderLink = React.useMemo(
@@ -54,7 +49,6 @@ const SessionItem: React.SFC<SessionItemProps> = React.memo(
         )),
       [_id]
     )
-    // const dispatch = useDispatch()
     let ver: NodeJS.Timeout | null = null
     const onTouchStart = () => {
       ver = setTimeout(() => {
@@ -63,7 +57,6 @@ const SessionItem: React.SFC<SessionItemProps> = React.memo(
           cancelText: '取消',
           title: `确定删除会话吗？`,
           onOk: () => {
-            // chat.deleteSession(_id)
             onDelete(_id)
           },
         })

@@ -1,15 +1,16 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { Grid, TextField, Button, makeStyles } from '@material-ui/core'
 import 'emoji-mart/css/emoji-mart.css'
 import { Picker, EmojiData } from 'emoji-mart'
 import getText from '../../../i18n'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     position: 'fixed',
     bottom: 0,
     left: 0,
-    background: '#fff',
+    // background: '#fff',
+    background: theme.palette.background.default,
     alignItems: 'center',
   },
   inputWrap: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles({
     height: 48,
     padding: 0,
   },
-})
+}))
 
 interface InputBarProps {
   onSend(msg: string): void

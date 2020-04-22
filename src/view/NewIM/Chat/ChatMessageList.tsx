@@ -33,9 +33,6 @@ const useStyles = makeStyles({
     right: 0,
     overflowY: 'scroll',
     padding: 10,
-    backgroundColor: '#fff',
-    // backgroundImage: 'url("/images/chatbox1.jpg")',
-    // backgroundSize: 'cover',
   },
   item: {
     alignItems: 'center',

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { getFriend, getSession } from '../../../store/modules'
 import {
   Avatar,
@@ -11,15 +11,8 @@ import {
   Fab,
   CircularProgress,
 } from '@material-ui/core'
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-  Link,
-  useHistory,
-} from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
-import { sessionAddAction } from '../../../store/modules/session'
-import { friendListAction } from '../../../store/modules/friend'
 import { IUserInfo } from '../../../store/modules/auth/types'
 import getSocket from '../socket'
 

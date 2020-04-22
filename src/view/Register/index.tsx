@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import { registerAction } from '../../store/modules/auth'
-// import userReducer from '../../store/user/reducers'
 import {
   Button,
   Container,
@@ -17,7 +16,6 @@ import { useDispatch } from 'react-redux'
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
-    backgroundColor: '#cfe8fc',
     height: '100vh',
     display: 'flex',
     alignContent: 'center',
@@ -31,11 +29,8 @@ const useStyles = makeStyles({
     justifyContent: 'center',
   },
   button: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     border: 0,
     borderRadius: 3,
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    color: 'white',
     height: 48,
     padding: '0 30px',
   },
@@ -110,13 +105,24 @@ const Register: React.SFC = () => {
           </Grid>
           <Grid item xs={8} container direction='row' justify='space-evenly'>
             <Grid>
-              <Button className={classes.button} fullWidth onClick={onRegister}>
+              <Button
+                className={classes.button}
+                fullWidth
+                onClick={onRegister}
+                color='primary'
+                variant='contained'
+              >
                 {getText('Register')}
               </Button>
             </Grid>
             <Grid>
               <Link to='/login'>
-                <Button className={classes.button} fullWidth>
+                <Button
+                  className={classes.button}
+                  fullWidth
+                  color='primary'
+                  variant='contained'
+                >
                   {getText('Login')}
                 </Button>
               </Link>

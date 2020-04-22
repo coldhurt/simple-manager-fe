@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
   user: {
-    background: '#eee',
+    // background: '#eee',
     marginTop: 60,
     padding: 10,
     alignItems: 'center',

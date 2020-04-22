@@ -23,7 +23,7 @@ export default class LazyLoadModule extends React.Component<
     super(props)
     this.state = {
       module: null,
-      hasError: null
+      hasError: null,
     }
   }
 
