@@ -2,20 +2,20 @@ import React from 'react'
 import Router from './route'
 import './App.css'
 import Message, { MessageProps } from './components/Message'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { IUtilState } from './store/modules/util/types'
 import {
   showMessageAction,
   hideMessageAction,
 } from './store/modules/util/actions'
-import { AppState } from './store/modules'
+import { AppState, getTheme } from './store/modules'
 import {
   Container,
   CssBaseline,
   makeStyles,
   ThemeProvider,
 } from '@material-ui/core'
-import { darkTheme } from './theme'
+import { darkTheme, theme } from './theme'
 
 export type MessageActionProps = {
   util: IUtilState
@@ -48,9 +48,10 @@ const AppComponent = () => {
 
 const App: React.SFC<MessageActionProps> = ({ util, hideMessageAction }) => {
   console.log(darkTheme)
+  const themeState = useSelector(getTheme)
   return (
     <div className='app-container'>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={themeState === 'night' ? darkTheme : theme}>
         <Message {...util.message} handleClose={hideMessageAction} />
         <AppComponent />
       </ThemeProvider>

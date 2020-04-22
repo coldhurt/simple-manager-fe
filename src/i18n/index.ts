@@ -48,6 +48,10 @@ const i18nData: Record<string, MultiLangText> = {
     en: 'Logout',
     zh: '退出',
   },
+  Setting: {
+    en: 'Setting',
+    zh: '设置',
+  },
 }
 
 const getText = (key: string) => {

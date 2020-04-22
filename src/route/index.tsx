@@ -138,6 +138,16 @@ const routes: IRouteItem[] = [
       />
     ),
   },
+  {
+    path: ['/NewIM/user/setting'],
+    exact: true,
+    component: (props: Object) => (
+      <LazyLoadModule
+        {...props}
+        resolve={() => import('../view/NewIM/User/Setting')}
+      />
+    ),
+  },
 
   {
     path: '*',

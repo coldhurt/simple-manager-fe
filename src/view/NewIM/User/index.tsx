@@ -10,6 +10,7 @@ import {
   Container,
 } from '@material-ui/core'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
+import SettingIcon from '@material-ui/icons/Settings'
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
@@ -28,7 +29,6 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
   user: {
-    // background: '#eee',
     marginTop: 60,
     padding: 10,
     alignItems: 'center',
@@ -65,9 +65,6 @@ const User: React.SFC = () => {
         Post('/api/admin/logout').then(() => {
           history.push('/login')
         })
-        // alert('退出')
-        // chat.deleteSession(_id)
-        // onDelete(_id)
       },
     })
   }
@@ -90,6 +87,18 @@ const User: React.SFC = () => {
             <Avatar variant='rounded' src={userInfo.avatar} />
           </ListItemIcon>
           <ListItemText primary={userInfo.nickname || userInfo.username} />
+          <ArrowForwardIcon />
+        </ListItem>
+        <ListItem
+          button
+          disableGutters
+          className={classes.user}
+          onClick={() => history.push('/NewIM/user/setting')}
+        >
+          <ListItemIcon>
+            <SettingIcon />
+          </ListItemIcon>
+          <ListItemText primary={getText('Setting')} />
           <ArrowForwardIcon />
         </ListItem>
       </List>

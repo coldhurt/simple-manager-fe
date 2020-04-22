@@ -1,6 +1,7 @@
 import friendReducer from './friend'
 import sessionReducer from './session'
 import authReducer from './auth'
+import settingReducer from './setting'
 import utilReducer from './util/reducers'
 import { combineReducers } from 'redux'
 
@@ -8,6 +9,7 @@ export const reducerMaps = {
   friend: friendReducer,
   session: sessionReducer,
   auth: authReducer,
+  setting: settingReducer,
   util: utilReducer,
 }
 
@@ -23,5 +25,6 @@ export const getChatBoxMessages = (state: AppState) =>
   state.session.chatboxMessage
 export const getFriend = (state: AppState) => state.friend
 export const getUserList = (state: AppState) => state.friend.users
+export const getTheme = (state: AppState) => state.setting.theme
 
 export default rootReducer
