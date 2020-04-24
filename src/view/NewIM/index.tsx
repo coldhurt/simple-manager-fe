@@ -33,12 +33,15 @@ const useStyles = makeStyles({
   },
 })
 
-const Main: React.SFC<{ tab: string }> = ({ tab }) => {
+const Main: React.SFC<{ tab: string; prevTab: string }> = ({
+  tab,
+  prevTab,
+}) => {
   const classes = useStyles()
   return (
     <div>
       <Slide
-        direction={tab === 'message' ? 'left' : 'right'}
+        direction={tab === 'message' || tab === 'friends' ? 'right' : 'left'}
         in={tab === 'message'}
         mountOnEnter
         unmountOnExit
@@ -48,7 +51,11 @@ const Main: React.SFC<{ tab: string }> = ({ tab }) => {
         </Container>
       </Slide>
       <Slide
-        direction={tab === 'friends' ? 'left' : 'right'}
+        direction={
+          (tab === 'friends' && prevTab === 'message') || tab === 'message'
+            ? 'left'
+            : 'right'
+        }
         in={tab === 'friends'}
         mountOnEnter
         unmountOnExit
@@ -58,7 +65,7 @@ const Main: React.SFC<{ tab: string }> = ({ tab }) => {
         </Container>
       </Slide>
       <Slide
-        direction={tab === 'user' ? 'left' : 'right'}
+        direction={tab === 'user' || tab === 'friends' ? 'left' : 'right'}
         in={tab === 'user'}
         mountOnEnter
         unmountOnExit
@@ -73,12 +80,12 @@ const Main: React.SFC<{ tab: string }> = ({ tab }) => {
 
 const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
   match,
-  location,
   history,
 }) => {
   getSocket()
-  // console.log(match.params, location, history)
   const { tab } = match.params
+  const [prevTab, setPrevTab] = React.useState(tab)
+  const [currentTab, setCurrentTab] = React.useState(tab)
   const route = ['message', 'friends', 'user', 'chat']
   if (!route.includes(tab)) {
     history.push('/NewIM/message')
@@ -95,12 +102,15 @@ const NewIM: React.SFC<RouteComponentProps<{ tab: string }>> = ({
   }, [sessions])
 
   const classes = useStyles()
+
   const handleChange = (event: React.ChangeEvent<{}>, newValue: string) => {
+    setPrevTab(tab)
+    setCurrentTab(newValue)
     history.push('/NewIM/' + newValue)
   }
   return (
     <div>
-      <Main tab={tab} />
+      <Main tab={currentTab} prevTab={prevTab} />
       <BottomNavigation
         onChange={handleChange}
         value={tab}

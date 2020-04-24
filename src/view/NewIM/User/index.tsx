@@ -22,7 +22,6 @@ import {
 import { getAuth } from '../../../store/modules'
 import { userInfoAction } from '../../../store/modules/auth'
 import getSocket from '../socket'
-// import { HeaderBar } from '../../../components'
 import getText from '../../../i18n'
 import { Modal } from 'antd'
 import { Post } from '../../../utils'
@@ -38,8 +37,6 @@ const useStyles = makeStyles((theme) =>
     },
     user: {
       marginTop: 60,
-      padding: 10,
-      alignItems: 'center',
     },
     username: {
       fontSize: '1.5em',
@@ -79,12 +76,6 @@ const User: React.SFC = () => {
   }
   return userInfo ? (
     <Container className={classes.root}>
-      {/* <HeaderBar
-        title={(userInfo && userInfo.nickname) || ''}
-        showBack={false}
-        rightText={getText('Logout')}
-        onRight={onLogout}
-      /> */}
       <List
         disablePadding
         subheader={
@@ -108,7 +99,6 @@ const User: React.SFC = () => {
         <ListItem
           button
           disableGutters
-          className={classes.user}
           onClick={() => history.push('/NewIM/user/setting')}
         >
           <ListItemIcon>

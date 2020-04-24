@@ -72,13 +72,13 @@ const InputBar: React.SFC<InputBarProps> = ({
             }}
           />
         </Grid>
-        {message && (
+        {/* {message && (
           <Grid item>
             <Button variant='contained' color='primary' onClick={onSubmit}>
               {getText('Send')}
             </Button>
           </Grid>
-        )}
+        )} */}
         <Grid item>
           <Button
             style={{
