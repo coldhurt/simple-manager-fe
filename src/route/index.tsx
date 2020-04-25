@@ -102,6 +102,16 @@ const routes: IRouteItem[] = [
     ),
   },
   {
+    path: ['/NewIM/chat/video/:id'],
+    exact: true,
+    component: (props: Object) => (
+      <LazyLoadModule
+        {...props}
+        resolve={() => import('../view/NewIM/Chat/VideoConnect')}
+      />
+    ),
+  },
+  {
     path: ['/NewIM/:tab', '/NewIM'],
     exact: true,
     component: (props: Object) => (

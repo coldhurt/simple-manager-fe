@@ -1,6 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { Post } from '../../utils'
-import { message } from 'antd'
+import { Post, toast } from '../../utils'
 import {
   ILoginAction,
   IUpdateUserInfoAction,
@@ -78,7 +77,7 @@ function* login(action: ILoginAction) {
       yield put(loginFailedAction(json.msg))
     }
   } catch (e) {
-    message.error(e.message)
+    toast.error(e.message)
     yield put(loginFailedAction(e.message))
   }
 }
@@ -109,7 +108,7 @@ function* addFriend(action: IFriendAddAction) {
       friend_id: action.friend_id,
     })
     if (json.success) {
-      message.success('添加成功')
+      toast.success('添加成功')
     }
     yield put(friendAddSuccessAction(json.data))
   } catch (e) {

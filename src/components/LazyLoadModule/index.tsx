@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ReactReduxContext } from 'react-redux'
 import './lazy.css'
-import { Skeleton } from 'antd'
+import Skeleton from '@material-ui/core/CircularProgress'
 
 interface ILazyProps {
   resolve(): Promise<any>

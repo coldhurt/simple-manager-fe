@@ -7,7 +7,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import InputBar from './InputBar'
 import getSocket from '../socket/index'
 import ChatMessageList from './ChatMessageList'
-import { message } from 'antd'
+import { toast } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
@@ -42,7 +42,7 @@ const Chat: React.SFC = () => {
     session_ids.includes(session_id) &&
     !targetSession
   ) {
-    message.error('目标会话不存在')
+    toast.error('目标会话不存在')
     history.goBack()
   }
   let friend_id = targetSession ? targetSession.friend_id : null

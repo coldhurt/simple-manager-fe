@@ -1,3 +1,4 @@
+// import { toast } from 'react-toastify'
 import { message } from 'antd'
 
 const postOptions = {
@@ -78,4 +79,10 @@ const setLocalStorage = (k: string, v: string) => {
   if (localStorage) return localStorage.setItem(k, v)
 }
 
-export { Post, getIdsAndMapData, getLocalStorage, setLocalStorage }
+export {
+  Post,
+  getIdsAndMapData,
+  getLocalStorage,
+  setLocalStorage,
+  message as toast,
+}

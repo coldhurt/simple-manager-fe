@@ -17,10 +17,10 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom'
-import { message } from 'antd'
 import { getUserInfo } from '../../../store/modules'
 import { useDispatch, useSelector } from 'react-redux'
 import { userInfoAction } from '../../../store/modules/auth'
+import { toast } from '../../../utils'
 
 export const useStyles = makeStyles({
   itemRight: {
@@ -56,7 +56,7 @@ const UserInfo: React.SFC = () => {
       console.log(files[0])
       const file = files[0]
       if (file.size > 2048000) {
-        message.error('图片大小不能大于2MB')
+        toast.error('图片大小不能大于2MB')
         return
       }
 

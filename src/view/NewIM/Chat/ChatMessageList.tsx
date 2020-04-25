@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { makeStyles, Grid, List, ListItem } from '@material-ui/core'
+import { makeStyles, Grid, List, ListItem, Avatar } from '@material-ui/core'
 import { getChatBoxMessages, getUserInfo } from '../../../store/modules'
 import { useSelector, useDispatch } from 'react-redux'
-import { Avatar } from 'antd'
 import { debounce } from 'lodash'
 import { IUserInfo } from '../../../store/modules/auth/types'
 import { IMessage } from '../../../store/modules/session/types'
@@ -20,8 +19,7 @@ export const scrollToBottom = debounce(() => {
       })
   }, 200)
 }, 300)
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -38,7 +36,12 @@ const useStyles = makeStyles({
     alignItems: 'center',
     height: '10vh',
   },
-})
+  itemMsg: {
+    padding: 10,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 3,
+  },
+}))
 
 interface ChatMessageItemProps {
   message: IMessage
@@ -59,11 +62,15 @@ const ChatMessageItem: React.SFC<ChatMessageItemProps> = ({
           <Grid item>
             <Avatar src={targetAvatar} style={{ marginRight: 10 }} />
           </Grid>
-          <Grid item>{message.message}</Grid>
+          <Grid item className={classes.itemMsg}>
+            {message.message}
+          </Grid>
         </Grid>
       ) : (
         <Grid item container justify='flex-end' className={classes.item}>
-          <Grid item>{message.message}</Grid>
+          <Grid item className={classes.itemMsg}>
+            {message.message}
+          </Grid>
           <Grid item>
             <Avatar
               src={userInfo ? userInfo.avatar : ''}

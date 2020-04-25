@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import { message } from 'antd'
+import { toast } from '../../../utils'
 import { debounce } from 'lodash'
 import store from '../../../store/index'
 import { AppState } from '../../../store/modules'
@@ -41,7 +41,7 @@ class Chat {
   }
 
   handleConnect = debounce((msg: string) => {
-    message.info('connected')
+    toast.info('connected')
   }, 2000)
 
   handleError = (err: ErrorMessage) => {
@@ -52,7 +52,7 @@ class Chat {
           break
         default:
       }
-    else message.error(err)
+    else toast.error(err)
   }
 
   showNotify = (msg = '', title = '消息') => {
@@ -63,7 +63,7 @@ class Chat {
   }
 
   handleDisconnect = (err: any) => {
-    message.error(err)
+    toast.error(err)
   }
 
   handleReceive = (msg: MessageObject) => {

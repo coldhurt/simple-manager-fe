@@ -8,7 +8,7 @@ import {
   TextField,
   makeStyles,
 } from '@material-ui/core'
-import { message } from 'antd'
+import { toast } from '../../utils'
 import { useHistory, Link } from 'react-router-dom'
 import getText from '../../i18n'
 import { useDispatch } from 'react-redux'
@@ -45,13 +45,13 @@ const Register: React.SFC = () => {
   const dispatch = useDispatch()
   const onRegister = useCallback(() => {
     if (!(username.length >= 5 && username.length <= 30)) {
-      message.error('username length should be between 5 and 30')
+      toast.error('username length should be between 5 and 30')
       return
     }
     if (password !== confirmPassword) {
-      message.error('password is not same to confirmPassword')
+      toast.error('password is not same to confirmPassword')
     } else if (!(password.length >= 8 && password.length <= 30)) {
-      message.error('password length should be between 8 and 30')
+      toast.error('password length should be between 8 and 30')
     } else {
       dispatch(
         registerAction(

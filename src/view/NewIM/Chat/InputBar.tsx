@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Grid, TextField, Button, makeStyles } from '@material-ui/core'
 import 'emoji-mart/css/emoji-mart.css'
 import { Picker, EmojiData } from 'emoji-mart'
-import getText from '../../../i18n'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,9 +92,28 @@ const InputBar: React.SFC<InputBarProps> = ({
           >
             {'😀'}
           </Button>
+          <Button
+            style={{
+              fontSize: 30,
+              height: 40,
+              lineHeight: 1,
+            }}
+            variant='text'
+            color='primary'
+            onClick={togglePane}
+          >
+            +
+          </Button>
         </Grid>
       </Grid>
       {showEmoji && <Picker darkMode onSelect={addEmoji} />}
+      {showPane && (
+        <div>
+          <Link to='/NewIM/chat/video/111'>
+            <Button>视频</Button>
+          </Link>
+        </div>
+      )}
     </Grid>
   )
 }

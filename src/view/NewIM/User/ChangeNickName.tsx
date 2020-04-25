@@ -11,7 +11,6 @@ import * as React from 'react'
 import { HeaderBar } from '../../../components'
 import { commonPageStyle } from '../styles'
 import { useStyles } from './UserInfo'
-import { message } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -19,6 +18,7 @@ import {
   updateUserInfoAction,
 } from '../../../store/modules/auth'
 import { getAuth } from '../../../store/modules'
+import { toast } from '../../../utils'
 
 const ChangeNickName: React.SFC = () => {
   const dispatch = useDispatch()
@@ -34,7 +34,7 @@ const ChangeNickName: React.SFC = () => {
     dispatch(
       updateUserInfoAction({ nickname: text }, (res: any) => {
         if (res && res.success) {
-          message.success('修改成功')
+          toast.success('修改成功')
           setTimeout(() => {
             history.goBack()
           })
