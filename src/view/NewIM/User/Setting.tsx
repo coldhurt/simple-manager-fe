@@ -13,11 +13,12 @@ import { getTheme } from '../../../store/modules'
 import { changeThemeAction } from '../../../store/modules/setting'
 import { HeaderBar } from '../../../components'
 import { ThemeType } from '../../../store/modules/setting/types'
+import { pxToVh } from '../../../utils'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: 20,
+      marginTop: pxToVh(20),
       width: '100%',
       backgroundColor: theme.palette.background.paper,
     },

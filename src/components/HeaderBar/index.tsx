@@ -6,7 +6,7 @@ import {
   makeStyles,
   createStyles,
   Theme,
-  Button
+  Button,
 } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import BackIcon from '@material-ui/icons/ArrowBack'
@@ -23,12 +23,12 @@ interface HeaderBarProps {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     menuButton: {
-      marginRight: theme.spacing(2)
+      marginRight: theme.spacing(2),
     },
     title: {
       flexGrow: 1,
-      color: '#fff'
-    }
+      color: '#fff',
+    },
   })
 )
 
@@ -38,7 +38,7 @@ const HeaderBar: React.SFC<HeaderBarProps> = ({
   backTo = '',
   onBack,
   rightText = '',
-  onRight
+  onRight,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -55,7 +55,7 @@ const HeaderBar: React.SFC<HeaderBarProps> = ({
     }
   }
   return (
-    <AppBar position='fixed'>
+    <AppBar position='absolute'>
       <Toolbar>
         {showBack && (
           <IconButton

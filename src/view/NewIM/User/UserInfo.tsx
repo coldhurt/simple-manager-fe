@@ -20,12 +20,12 @@ import {
 import { getUserInfo } from '../../../store/modules'
 import { useDispatch, useSelector } from 'react-redux'
 import { userInfoAction } from '../../../store/modules/auth'
-import { toast } from '../../../utils'
+import { toast, pxToVw } from '../../../utils'
 
 export const useStyles = makeStyles({
   itemRight: {
     textAlign: 'right',
-    paddingRight: 10,
+    paddingRight: pxToVw(10),
   },
 })
 

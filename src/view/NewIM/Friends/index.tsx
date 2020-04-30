@@ -11,14 +11,16 @@ import {
   Fab,
   CircularProgress,
 } from '@material-ui/core'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
 import { IUserInfo } from '../../../store/modules/auth/types'
 import getSocket from '../socket'
+import AddModal from './AddModal'
+import { pxToVw, pxToVh } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
-    padding: 10,
+    padding: pxToVw(10),
   },
   avatar: {
     marginRight: '3vw',
@@ -27,8 +29,8 @@ const useStyles = makeStyles({
   },
   add: {
     position: 'fixed',
-    right: 10,
-    bottom: 70,
+    right: pxToVw(10),
+    bottom: pxToVh(70),
   },
 })
 
@@ -54,6 +56,7 @@ const FriendItem: React.SFC<FriendItemProps> = ({ friend, sessionAdd }) => {
 
 const Friends: React.SFC = () => {
   const chat = getSocket()
+  const [showModal, setShowModal] = React.useState(false)
   const { friends, friend_ids, listLoading } = useSelector(getFriend)
   const { sessions, session_ids } = useSelector(getSession)
   const history = useHistory()
@@ -78,7 +81,7 @@ const Friends: React.SFC = () => {
   }
   const classes = useStyles()
   return (
-    <div>
+    <>
       {listLoading ? (
         <CircularProgress />
       ) : (
@@ -95,12 +98,16 @@ const Friends: React.SFC = () => {
           })}
         </List>
       )}
-      <Link to='/NewIM/friends/add'>
-        <Fab color='primary' aria-label='add' className={classes.add}>
-          <AddIcon />
-        </Fab>
-      </Link>
-    </div>
+      <Fab
+        color='primary'
+        aria-label='add'
+        className={classes.add}
+        onClick={() => setShowModal(true)}
+      >
+        <AddIcon />
+      </Fab>
+      <AddModal show={showModal} onClose={() => setShowModal(false)} />
+    </>
   )
 }
 export default Friends

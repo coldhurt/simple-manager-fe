@@ -79,10 +79,22 @@ const setLocalStorage = (k: string, v: string) => {
   if (localStorage) return localStorage.setItem(k, v)
 }
 
+const BASE_WIDTH = 375
+const BASE_HEIGHT = 667
+const pxToVw = (px: number) => {
+  return px / (BASE_WIDTH / 100) + 'vw'
+}
+
+const pxToVh = (px: number) => {
+  return px / (BASE_HEIGHT / 100) + 'vh'
+}
+
 export {
   Post,
   getIdsAndMapData,
   getLocalStorage,
   setLocalStorage,
   message as toast,
+  pxToVw,
+  pxToVh,
 }

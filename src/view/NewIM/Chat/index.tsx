@@ -92,6 +92,7 @@ const Chat: React.SFC = () => {
             showPane={showPane}
             togglePane={togglePane}
             toggleEmoji={toggleEmoji}
+            session_id={session_id}
           />
         </Container>
       </Slide>

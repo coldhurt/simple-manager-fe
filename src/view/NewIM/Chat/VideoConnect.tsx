@@ -1,31 +1,28 @@
 import React, { useEffect, createRef } from 'react'
-import { toast } from '../../../utils'
 import { HeaderBar } from '../../../components'
+import getSocket from '../socket'
+import { useParams } from 'react-router-dom'
 
 const VideoConnect = () => {
-  const ref = createRef<HTMLVideoElement>()
+  const myVideo = createRef<HTMLVideoElement>()
+  const friendVideo = createRef<HTMLVideoElement>()
+  const socket = getSocket()
+  const params = useParams<{ id: string }>()
   useEffect(() => {
-    if (ref)
-      navigator.getUserMedia(
-        { video: true, audio: false },
-        (stream) => {
-          if (ref.current) {
-            try {
-              ref.current.src = window.URL.createObjectURL(stream)
-            } catch (e) {
-              ref.current.srcObject = stream
-            }
-          }
-        },
-        (err) => {
-          toast.error(err.message)
-        }
-      )
-  }, [ref])
+    if (myVideo.current && friendVideo.current && params.id && socket)
+      socket.startVideo(params.id, myVideo.current, friendVideo.current)
+    return socket.closeVideo
+  }, [myVideo, friendVideo, params.id, socket])
   return (
     <div>
       <HeaderBar showBack={true} title='视频' />
-      <video ref={ref} height={400} width={window.screen.width} autoPlay />
+      <video ref={myVideo} height={400} width={window.screen.width} autoPlay />
+      <video
+        ref={friendVideo}
+        height={400}
+        width={window.screen.width}
+        autoPlay
+      />
     </div>
   )
 }

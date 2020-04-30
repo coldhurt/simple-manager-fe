@@ -3,6 +3,7 @@ import { Grid, TextField, Button, makeStyles } from '@material-ui/core'
 import 'emoji-mart/css/emoji-mart.css'
 import { Picker, EmojiData } from 'emoji-mart'
 import { Link } from 'react-router-dom'
+import { pxToVh } from '../../../utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   inputWrap: {
-    height: 50,
+    height: pxToVh(50),
   },
   input: {
-    height: 48,
+    height: pxToVh(48),
     padding: 0,
   },
 }))
@@ -28,6 +29,7 @@ interface InputBarProps {
   toggleEmoji(): void
   showPane: boolean
   togglePane(): void
+  session_id: string
 }
 
 const InputBar: React.SFC<InputBarProps> = ({
@@ -36,6 +38,7 @@ const InputBar: React.SFC<InputBarProps> = ({
   toggleEmoji,
   showPane,
   togglePane,
+  session_id,
 }) => {
   const [message, setMessage] = useState('')
   const classes = useStyles()
@@ -55,7 +58,7 @@ const InputBar: React.SFC<InputBarProps> = ({
         justify='space-around'
         alignItems='center'
       >
-        <Grid item xs={6}>
+        <Grid item style={{ flex: 1 }}>
           <TextField
             fullWidth
             value={message}
@@ -66,6 +69,10 @@ const InputBar: React.SFC<InputBarProps> = ({
                 ev.preventDefault()
                 onSubmit()
               }
+            }}
+            onFocus={() => {
+              if (showPane) togglePane()
+              if (showEmoji) togglePane()
             }}
             onChange={(e) => {
               setMessage(e.target.value)
@@ -109,7 +116,7 @@ const InputBar: React.SFC<InputBarProps> = ({
       {showEmoji && <Picker darkMode onSelect={addEmoji} />}
       {showPane && (
         <div>
-          <Link to='/NewIM/chat/video/111'>
+          <Link to={`/NewIM/chat/video/${session_id}`}>
             <Button>视频</Button>
           </Link>
         </div>

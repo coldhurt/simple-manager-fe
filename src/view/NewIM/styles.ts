@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core'
+import { pxToVh } from '../../utils'
 
 const commonPageStyle = makeStyles({
   root: {
@@ -11,7 +12,7 @@ const commonPageStyle = makeStyles({
   },
   content: {
     position: 'fixed',
-    top: 56,
+    top: pxToVh(56),
     bottom: 0,
     left: 0,
     right: 0,

@@ -18,18 +18,23 @@ import { useSelector } from 'react-redux'
 import { getSession } from '../../store/modules'
 import getSocket from './socket'
 import getText from '../../i18n'
+import { pxToVh } from '../../utils'
 
 const useStyles = makeStyles({
   content: {
     position: 'fixed',
-    bottom: 56,
+    bottom: pxToVh(56),
     width: '100vw',
     top: 0,
+    overflowY: 'scroll',
+    maxWidth: 800,
   },
   bottom: {
     position: 'fixed',
     bottom: 0,
+    height: pxToVh(56),
     width: '100vw',
+    maxWidth: 800,
   },
 })
 

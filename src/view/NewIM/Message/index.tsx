@@ -19,10 +19,11 @@ import { ISession } from '../../../store/modules/session/types'
 import { IUserInfo } from '../../../store/modules/auth/types'
 import { Modal } from 'antd'
 import getSocket from '../socket'
+import { pxToVw } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
-    padding: 10,
+    padding: pxToVw(10),
   },
   avatar: {
     marginRight: '3vw',

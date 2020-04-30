@@ -14,17 +14,13 @@ import {
 } from '@material-ui/core'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import SettingIcon from '@material-ui/icons/Settings'
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-  useHistory,
-} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { getAuth } from '../../../store/modules'
 import { userInfoAction } from '../../../store/modules/auth'
 import getSocket from '../socket'
 import getText from '../../../i18n'
 import { Modal } from 'antd'
-import { Post } from '../../../utils'
+import { Post, pxToVh } from '../../../utils'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,7 +32,7 @@ const useStyles = makeStyles((theme) =>
       textAlign: 'right',
     },
     user: {
-      marginTop: 60,
+      marginTop: pxToVh(60),
     },
     username: {
       fontSize: '1.5em',
@@ -55,13 +51,6 @@ const User: React.SFC = () => {
     }
   }, [userInfo, dispatch])
   const classes = useStyles()
-  const renderLink = React.useMemo(
-    () =>
-      React.forwardRef<any, Omit<RouterLinkProps, 'to'>>((itemProps, ref) => (
-        <RouterLink to={`/NewIM/user/info`} ref={ref} {...itemProps} />
-      )),
-    []
-  )
   const onLogout = () => {
     Modal.confirm({
       okText: '确定',
@@ -88,7 +77,7 @@ const User: React.SFC = () => {
           button
           disableGutters
           className={classes.user}
-          component={renderLink}
+          onClick={() => history.push('/NewIM/user/info')}
         >
           <ListItemIcon>
             <Avatar variant='rounded' src={userInfo.avatar} />

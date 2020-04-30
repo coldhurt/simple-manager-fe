@@ -7,6 +7,7 @@ import { IUserInfo } from '../../../store/modules/auth/types'
 import { IMessage } from '../../../store/modules/session/types'
 import { userInfoAction } from '../../../store/modules/auth'
 import getSocket from '../socket'
+import { pxToVh, pxToVw } from '../../../utils'
 
 export const scrollToBottom = debounce(() => {
   setTimeout(() => {
@@ -25,21 +26,21 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     position: 'fixed',
-    top: 56,
-    bottom: 56,
+    top: pxToVh(56),
+    bottom: pxToVh(56),
     left: 0,
     right: 0,
     overflowY: 'scroll',
-    padding: 10,
+    padding: pxToVw(10),
   },
   item: {
     alignItems: 'center',
     height: '10vh',
   },
   itemMsg: {
-    padding: 10,
+    padding: pxToVw(10),
     backgroundColor: theme.palette.background.paper,
-    borderRadius: 3,
+    borderRadius: pxToVw(3),
   },
 }))
 

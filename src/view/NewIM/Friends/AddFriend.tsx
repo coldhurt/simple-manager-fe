@@ -20,10 +20,11 @@ import { userInfoAction } from '../../../store/modules/auth'
 import { IUserInfo } from '../../../store/modules/auth/types'
 import { friendAddAction, userListAction } from '../../../store/modules/friend'
 import getText from '../../../i18n'
+import { pxToVw } from '../../../utils'
 
 const useStyles = makeStyles({
   root: {
-    padding: 10,
+    padding: pxToVw(10),
   },
   avatar: {
     marginRight: '3vw',
