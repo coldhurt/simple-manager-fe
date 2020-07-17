@@ -12,7 +12,7 @@
     "antd": "^4.0.3",
     "braft-editor": "^2.3.8",
     "emoji-mart": "^3.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "lodash.template": "^4.5.0",
     "moment": "^2.24.0",
     "react": "^16.12.0",
